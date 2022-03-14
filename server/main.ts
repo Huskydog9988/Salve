@@ -10,7 +10,11 @@ import { cleanUserId } from "./utils";
  * The main server code
  * @param db loki db class
  */
-export function socketServer(server: Server, db: Loki) {
+export function socketServer(
+  server: Server,
+  userHandler: UserHandler,
+  meetingHandler: MeetingHandler
+) {
   // create websocket server
   const io = new SocketIOServer(server, {
     // serveClient: false,
@@ -19,9 +23,6 @@ export function socketServer(server: Server, db: Loki) {
   instrument(io, {
     auth: false,
   });
-
-  // const users = db.getCollection<UserData>("users");
-  // const meetings = db.getCollection<MeetingData>("meetings");
 
   /**
    * Event Format:
@@ -43,9 +44,6 @@ export function socketServer(server: Server, db: Loki) {
   // when user connects via socket
   io.on("connection", (socket) => {
     console.log("a user connected");
-
-    const meetingHandler = new MeetingHandler(db);
-    const userHandler = new UserHandler(db);
 
     /**
      * Allows client to specify which room to join
