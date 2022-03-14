@@ -32,3 +32,5 @@ Copyright (c) 2022-present [Huskydog9988](https://github.com/Huskydog9988) and [
 The logo was designed by [Huskydog9988](https://github.com/Huskydog9988) and uses assets from [Twitter's Twemoji](https://twemoji.twitter.com/) which is [licensed under CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 A full breakdown of **every dependency's** license not mentioned here [is provided](./docs/licenses.txt). This includes the licenses for packages that Salve is indirectly using as well.
+
+A special thanks to Eric Blade for their [Quagga2 react example](https://github.com/ericblade/quagga2-react-example).
