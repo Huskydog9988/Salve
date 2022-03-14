@@ -20,7 +20,6 @@ export default function ButtonLink({
   children,
 }: ButtonLinkProps) {
   return (
-    
     <Link href={link} underline="none">
       <Button variant={variant}>{children}</Button>
     </Link>

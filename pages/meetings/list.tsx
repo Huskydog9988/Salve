@@ -11,7 +11,6 @@ import dynamic from "next/dynamic";
 const MeetingsTable = dynamic(() => import("../../src/MeetingsTable"));
 
 const Home: NextPage = () => {
-
   const [meetings, setMeetings] = useState<MeetingData[]>([]);
 
   // Gets all meetings from the database for display

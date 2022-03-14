@@ -37,7 +37,7 @@ export default function MeetingTable({ meetings }: HomeTableProps) {
             const end = DateTime.fromISO(meeting.endTime || emEndTime);
             const start = DateTime.fromISO(meeting.startTime);
             const diff = end.diff(start);
-            
+
             // converts different in times between start and end to "hh:mm:ss" format
             const dur = Duration.fromObject(diff.toObject()).toFormat(
               "hh:mm:ss"

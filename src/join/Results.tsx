@@ -21,7 +21,6 @@ interface ResultsProps {
 
 export default function VirtualizedList({ users }: ResultsProps) {
   return (
-    
     <Box
       sx={{
         width: "100%",

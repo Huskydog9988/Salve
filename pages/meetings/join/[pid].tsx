@@ -27,7 +27,6 @@ export default function Scan() {
   const router = useRouter();
   const { pid } = router.query;
 
-  
   function pushUsers(id: string) {
     // setUsers((prevUsers) => new Set([...users, id]));
     setUsers((prevUsers) => new Set(prevUsers.add(id)));
@@ -60,7 +59,6 @@ export default function Scan() {
     socket.emit("join", pid);
     socket.emit("meeting:getPlus", pid);
   }, [pid]);
-
 
   function saveUser(id: string) {
     socket.emit("meeting:user:join", {
@@ -145,7 +143,7 @@ export default function Scan() {
           <Results users={users} />
         </Grid>
       </Grid>
-      
+
       <Box
         component="form"
         sx={{
@@ -177,7 +175,7 @@ export default function Scan() {
               setEnteredID(event.target.value);
             }}
           />
-          
+
           <Button variant="contained" onClick={manualID} type="submit">
             Add User
           </Button>
