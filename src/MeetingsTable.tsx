@@ -37,15 +37,14 @@ export default function MeetingTable({ meetings }: HomeTableProps) {
             const end = DateTime.fromISO(meeting.endTime || emEndTime);
             const start = DateTime.fromISO(meeting.startTime);
             const diff = end.diff(start);
-            // const dur = Duration.fromObject(diff.toObject()).toHuman({ listStyle: "long" });
-
+            
             // converts different in times between start and end to "hh:mm:ss" format
             const dur = Duration.fromObject(diff.toObject()).toFormat(
               "hh:mm:ss"
             );
 
             const link = `/meetings/info/${meeting.id}`;
-
+            //Creats a table of meeting with Name, Time, Length, and Member Amount
             return (
               <TableRow
                 key={meeting.id}
@@ -64,11 +63,7 @@ export default function MeetingTable({ meetings }: HomeTableProps) {
                   {meeting.participants.length}
                 </TableCell>
                 <TableCell align="left">
-                  {/* <Button variant="contained">
-                    <Link href={link} underline="none">
-                      More Info
-                    </Link>
-                  </Button> */}
+                  {/* Button that links to info page for the meeting */}
                   <ButtonLink link={link}>More Info</ButtonLink>
                 </TableCell>
               </TableRow>

@@ -82,7 +82,6 @@ const Scanner = ({
     drawingCtx.fillStyle = "green";
 
     if (result) {
-      // console.warn('* quagga onProcessed', result);
       if (result.boxes) {
         drawingCtx.clearRect(
           0,
@@ -105,17 +104,12 @@ const Scanner = ({
           lineWidth: 2,
         });
       }
+      // Enters user if user ID found
       if (result.codeResult && result.codeResult.code) {
-        // const validated = barcodeValidator(result.codeResult.code);
-        // const validated = validateBarcode(result.codeResult.code);
-        // Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: validated ? 'green' : 'red', lineWidth: 3 });
         drawingCtx.font = "24px Arial";
-        // drawingCtx.fillStyle = validated ? 'green' : 'red';
-        // drawingCtx.fillText(`${result.codeResult.code} valid: ${validated}`, 10, 50);
         drawingCtx.fillText(result.codeResult.code, 10, 20);
-        // if (validated) {
         onDetected(result.codeResult.code);
-        // }
+        
       }
     }
   };
@@ -175,17 +169,5 @@ const Scanner = ({
   return null;
 };
 
-// Scanner.propTypes = {
-//   onDetected: PropTypes.func.isRequired,
-//   scannerRef: PropTypes.object.isRequired,
-//   onScannerReady: PropTypes.func,
-//   cameraId: PropTypes.string,
-//   facingMode: PropTypes.string,
-//   constraints: PropTypes.object,
-//   locator: PropTypes.object,
-//   numOfWorkers: PropTypes.number,
-//   decoders: PropTypes.array,
-//   locate: PropTypes.bool,
-// };
 
 export default Scanner;

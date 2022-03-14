@@ -27,6 +27,7 @@ const About: NextPage = () => {
           alignItems: "center",
         }}
       >
+        {/* Description */}
         <Typography variant="h1" component="h1" gutterBottom>
           About
         </Typography>
@@ -42,7 +43,7 @@ const About: NextPage = () => {
           technology, so why are we still waiting for students to respond
           &quot;here&quot;?
         </Typography>
-
+        {/* Return to home page */}
         <ButtonLink link="/">Go to the home page</ButtonLink>
       </Box>
     </Container>

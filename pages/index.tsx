@@ -17,8 +17,9 @@ const Home: NextPage = () => {
           alignItems: "center",
         }}
       >
-        <Image alt="👋 Salve" src={Salve} width={900} height={300} priority />
 
+        <Image alt="👋 Salve" src={Salve} width={900} height={300} priority />
+        {/* List of links to each page of the website */}
         <ButtonLink link="/meetings/create">Create a Meeting</ButtonLink>
         <ButtonLink link="/meetings/list">View all Meetings</ButtonLink>
         <ButtonLink link="/users/list">View all Users</ButtonLink>

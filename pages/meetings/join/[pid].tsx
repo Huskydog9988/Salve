@@ -27,12 +27,7 @@ export default function Scan() {
   const router = useRouter();
   const { pid } = router.query;
 
-  //const enteredID = "";
-
-  // socket.emit("meeting:end", pid);
-
-  // console.log(`pid glob ${pid}`);
-
+  
   function pushUsers(id: string) {
     // setUsers((prevUsers) => new Set([...users, id]));
     setUsers((prevUsers) => new Set(prevUsers.add(id)));
@@ -55,17 +50,17 @@ export default function Scan() {
       }
     );
   }, []);
-
+  //Adding user's name (if not avalible, their id) to meeting when confirmed they are not already joined
   useEffect(() => {
     socket.on("meeting:user:join:result", (user) => {
       pushUsers(user);
     });
   }, []);
-
   useEffect(() => {
     socket.emit("join", pid);
     socket.emit("meeting:getPlus", pid);
   }, [pid]);
+
 
   function saveUser(id: string) {
     socket.emit("meeting:user:join", {
@@ -73,11 +68,12 @@ export default function Scan() {
       user: id,
     });
   }
-
+  //Removes extra identification letter found at begining of ID
   function detected(result: string) {
     const char = result[0];
     saveUser(result.substring(+(char === "P")));
   }
+  //Makes sure the ID is not the zero characters long
   function manualID(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
 
@@ -91,11 +87,13 @@ export default function Scan() {
     }
   }
 
+  //Adds meeting to database
   function endMeeting(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     socket.emit("meeting:end", pid);
   }
 
+  //Moves user to meeting's info page after confirmed that user ended moving
   useEffect(() => {
     socket.on("meeting:end:result", (meetingID) => {
       socket.emit("leave", pid);
@@ -108,9 +106,14 @@ export default function Scan() {
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={5}>
         <Grid item xs={3} md={6}>
+          {/* Allows user to enable/disable camera for privacy reasons */}
           <Button variant="contained" onClick={() => setScanning(!scanning)}>
             {scanning ? "Stop" : "Start"}
           </Button>
+          {/* Displays the scanner 
+          
+              May not function on some computers/search engines
+          */}
           {/* @ts-ignore */}
           <div ref={scannerRef}>
             <canvas
@@ -136,12 +139,13 @@ export default function Scan() {
             ) : null}
           </div>
         </Grid>
+        {/* Displays users that have joined */}
         <Grid item xs={5}>
           <h1>Users:</h1>
           <Results users={users} />
         </Grid>
       </Grid>
-
+      
       <Box
         component="form"
         sx={{
@@ -159,6 +163,7 @@ export default function Scan() {
       <Grid container spacing={1} direction="row">
         <Grid item xs={3}></Grid>
         <Grid item xs={3}>
+          {/* Manually adds user IDs if camera not functioning */}
           <TextField
             required
             id="id"
@@ -172,11 +177,13 @@ export default function Scan() {
               setEnteredID(event.target.value);
             }}
           />
+          
           <Button variant="contained" onClick={manualID} type="submit">
             Add User
           </Button>
         </Grid>
         <Grid item xs={1}></Grid>
+        {/* Button to end meeting */}
         <Grid item xs={3}>
           <Button variant="contained" onClick={endMeeting}>
             End Meeting

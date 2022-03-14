@@ -39,7 +39,6 @@ export default function MeetingsTable({ users, lateTime }: MeetingTableProps) {
             <TableCell>User Name</TableCell>
             <TableCell align="left">ID</TableCell>
             <TableCell align="left">Time Joined</TableCell>
-            {/*<TableCell align="right">On Time</TableCell>*/}
           </TableRow>
         </TableHead>
         <TableBody>

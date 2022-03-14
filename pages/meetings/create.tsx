@@ -20,8 +20,7 @@ export default function Scan() {
   const [name, setName] = useState("");
   const [time, setTime] = useState<DateTime | null>(null);
 
-  // const oldTime = { ...time };
-
+  
   const [creatingMeeting, setCreatingMeeting] = useState(false);
 
   const [error_name, setError_name] = useState(false);
@@ -107,6 +106,7 @@ export default function Scan() {
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
+        {/* Sumbits data, only if it is the correct formatting */}
         <LoadingButton
           variant="contained"
           onClick={CreateMeeting}
@@ -115,6 +115,7 @@ export default function Scan() {
         >
           Create Meeting
         </LoadingButton>
+        {/* Returns to home page */}
         <Grid container>
           <Grid item xs={2}></Grid>
           <Grid item xs={8}>

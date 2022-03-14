@@ -21,6 +21,7 @@ interface ResultsProps {
 
 export default function VirtualizedList({ users }: ResultsProps) {
   return (
+    
     <Box
       sx={{
         width: "100%",
@@ -37,6 +38,7 @@ export default function VirtualizedList({ users }: ResultsProps) {
         itemData={Array.from(users)}
         overscanCount={5}
       >
+        {/* Displays table of users' data */}
         {renderRow}
       </FixedSizeList>
     </Box>

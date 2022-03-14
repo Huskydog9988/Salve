@@ -28,6 +28,7 @@ const Home: NextPage = () => {
 
     event.preventDefault();
 
+    // Only allows user to be added if they name and ID are filled in, else they receive their respective errors
     if (name.length < 1) {
       setError_name(true);
     }
@@ -36,7 +37,6 @@ const Home: NextPage = () => {
     }
 
     if (id.length >= 1 && name.length >= 1) {
-      // handleClickOpen();
       const user: UserData = {
         id,
         name,
@@ -44,19 +44,21 @@ const Home: NextPage = () => {
 
       socket.emit("user:create", user);
       setCreatingUser(true);
+      // Resets fields
       setName("");
       setId("");
     }
 
-    //add feathers here
   }
 
+  //Reloads page after user added
   useEffect(() => {
     socket.on("user:create:result", (id) => {
       setCreatingUser(false);
       router.reload();
     });
   }, [router]);
+  //Get users when page loaded
   useEffect(() => {
     socket.on("user:list:result", (result) => {
       setUsers(result);
@@ -64,12 +66,10 @@ const Home: NextPage = () => {
   }, []);
   useEffect(() => {
     socket.on("user:delete:result", (id) => {
-      // users.splice(users.findIndex((user) => user.id === id), 1)
-      // setUsers(users);
       router.reload();
     });
   }, [router]);
-
+  //Asks backend for information on page loaded
   useEffect(() => {
     socket.emit("user:list");
     socket.emit("join", "users");
@@ -102,33 +102,14 @@ const Home: NextPage = () => {
                   alignItems: "center",
                 }}
               >
+                {/* Creates table of users in database */}
                 <UserTable users={users} />
               </Box>
             </Container>
           </Grid>
+          {/* Form to add users to the database */}
           <Grid item xs={5}>
             <Box>
-              {/* <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">
-        {"Use Google's location service?"}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          {JSON.stringify(time)}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Disagree</Button>
-        <Button onClick={handleClose} autoFocus>
-          Agree
-        </Button>
-      </DialogActions>
-    </Dialog> */}
               <Box
                 component="form"
                 sx={{
@@ -143,6 +124,7 @@ const Home: NextPage = () => {
                 noValidate
                 autoComplete="off"
               >
+                {/* Name field */}
                 <TextField
                   error={error_name}
                   required
@@ -156,7 +138,7 @@ const Home: NextPage = () => {
                     setName(event.target.value);
                   }}
                 />
-
+                {/* ID field */}
                 <TextField
                   error={error_id}
                   required
@@ -170,7 +152,7 @@ const Home: NextPage = () => {
                     setId(event.target.value);
                   }}
                 />
-
+                {/* Enter button for creating new users */}
                 <LoadingButton
                   variant="contained"
                   onClick={CreateUser}
@@ -179,9 +161,7 @@ const Home: NextPage = () => {
                 >
                   Create User
                 </LoadingButton>
-                {/* <Button variant="contained" onClick={CreateUser} type="submit">
-      Create User
-    </Button> */}
+                
               </Box>
             </Box>
           </Grid>

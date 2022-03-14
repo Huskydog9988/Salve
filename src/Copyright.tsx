@@ -9,6 +9,7 @@ export default function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {"Copyright © "}
+      {/* Links to our teams' members GitHub pages */}
       <MuiLink color="inherit" href="https://github.com/Huskydog9988">
         Huskydog9988
       </MuiLink>
