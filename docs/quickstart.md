@@ -11,7 +11,7 @@ The first step is to download and install [docker](https://docs.docker.com/get-d
 To get Salve started, just run the command below in any terminal.
 
 ```bash
-docker run -it -p 8000:8000 --pull always --init huskydog9988/salve
+docker run -it -p 8000:8000 --pull always --init --rm huskydog9988/salve
 ```
 
 Then access [http://localhost:8000](http://localhost:8000) (or [http://127.0.0.1:8000](http://127.0.0.1:8000)) on the same device and your done. You can use Salve to your hearts content.
