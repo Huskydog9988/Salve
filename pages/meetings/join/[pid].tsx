@@ -161,11 +161,7 @@ export default function Scan() {
       <Grid container spacing={1} direction="row">
         <Grid item xs={3}></Grid>
         <Grid item xs={3}>
-          <Box
-            component="form"
-            noValidate
-            autoComplete="off"
-          >
+          <Box component="form" noValidate autoComplete="off">
             {/* Manually adds user IDs if camera not functioning */}
             <TextField
               required
@@ -180,7 +176,7 @@ export default function Scan() {
                 setEnteredID(event.target.value);
               }}
             />
-            
+
             <Button variant="contained" onClick={manualID} type="submit">
               Add User
             </Button>
