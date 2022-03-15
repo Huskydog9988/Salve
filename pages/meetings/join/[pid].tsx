@@ -163,24 +163,30 @@ export default function Scan() {
       <Grid container spacing={1} direction="row">
         <Grid item xs={3}></Grid>
         <Grid item xs={3}>
-          {/* Manually adds user IDs if camera not functioning */}
-          <TextField
-            required
-            id="id"
-            label="ID"
-            helperText="Users ID"
-            variant="outlined"
-            error={error_id}
-            value={enteredID}
-            onChange={(event) => {
-              setError_id(false);
-              setEnteredID(event.target.value);
-            }}
-          />
-          
-          <Button variant="contained" onClick={manualID} type="submit">
-            Add User
-          </Button>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+            {/* Manually adds user IDs if camera not functioning */}
+            <TextField
+              required
+              id="id"
+              label="ID"
+              helperText="Users ID"
+              variant="outlined"
+              error={error_id}
+              value={enteredID}
+              onChange={(event) => {
+                setError_id(false);
+                setEnteredID(event.target.value);
+              }}
+            />
+            
+            <Button variant="contained" onClick={manualID} type="submit">
+              Add User
+            </Button>
+          </Box>
         </Grid>
         <Grid item xs={1}></Grid>
         {/* Button to end meeting */}
