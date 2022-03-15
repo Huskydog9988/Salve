@@ -8,11 +8,13 @@ The first step is to download and install [docker](https://docs.docker.com/get-d
 
 ## 👟 Finally Running It
 
-Yep, thats it! Run the command below and your off to the races.
+To get Salve started, just run the command below in any terminal.
 
 ```bash
-docker run -it -p 8000:8000 --init huskydog9988/salve
+docker run -it -p 8000:8000 --pull always --init --rm huskydog9988/salve
 ```
+
+Then access [http://localhost:8000](http://localhost:8000) (or [http://127.0.0.1:8000](http://127.0.0.1:8000)) on the same device and your done. You can use Salve to your hearts content.
 
 ## ❓ FAQ
 
@@ -20,7 +22,7 @@ docker run -it -p 8000:8000 --init huskydog9988/salve
 
 Simply press on your keyboard the `ctrl` and `c` keys at the same time while in the same terminal as Salve is running.
 
-### 🆘 **HELP!** Docker says an error occurred while connecting!
+### 🐋 **HELP!** Docker says an error occurred while connecting!
 
 Example error:
 
@@ -30,3 +32,7 @@ See 'docker run --help'.
 ```
 
 The solution here is simple, you just need to ensure that docker is running. To do this, simply open up search and type "Docker Desktop", then upon seeing the application with the same name, **run it**. Give it a minute or too to get going and then you should be fine to run the cmd up above.
+
+### 🆘 I still have an issue!!
+
+If thats the case, we're sorry to hear that. We can help diagnose and solve any issues you might be experiencing if you [open up a new issue](https://github.com/Huskydog9988/Salve/issues/new).

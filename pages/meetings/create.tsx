@@ -20,7 +20,6 @@ export default function Scan() {
   const [name, setName] = useState("");
   const [time, setTime] = useState<DateTime | null>(null);
 
-  
   const [creatingMeeting, setCreatingMeeting] = useState(false);
 
   const [error_name, setError_name] = useState(false);

@@ -109,7 +109,6 @@ const Scanner = ({
         drawingCtx.font = "24px Arial";
         drawingCtx.fillText(result.codeResult.code, 10, 20);
         onDetected(result.codeResult.code);
-        
       }
     }
   };
@@ -168,6 +167,5 @@ const Scanner = ({
   ]);
   return null;
 };
-
 
 export default Scanner;

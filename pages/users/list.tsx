@@ -48,7 +48,6 @@ const Home: NextPage = () => {
       setName("");
       setId("");
     }
-
   }
 
   //Reloads page after user added
@@ -161,7 +160,6 @@ const Home: NextPage = () => {
                 >
                   Create User
                 </LoadingButton>
-                
               </Box>
             </Box>
           </Grid>
