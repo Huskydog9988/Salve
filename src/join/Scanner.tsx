@@ -41,6 +41,13 @@ const defaultLocatorSettings: DefaultLocatorSettings = {
   halfSample: true,
 };
 
+const debugConfig = {
+  drawBoundingBox: true,
+  showFrequency: true,
+  drawScanline: true,
+  showPattern: true,
+};
+
 const defaultDecoders = ["code_39_reader", "code_39_vin_reader"];
 
 const Scanner = ({
@@ -62,6 +69,7 @@ const Scanner = ({
         result === undefined ||
         result.codeResult === undefined
       ) {
+        console.log("Not detected");
         return;
       }
 
@@ -124,10 +132,11 @@ const Scanner = ({
             ...(!cameraId && { facingMode }),
           },
           target: scannerRef.current,
+          singleChannel: true,
         },
         locator,
         numOfWorkers,
-        decoder: { readers: decoders, multiple: true },
+        decoder: { readers: decoders, multiple: true, debug: debugConfig },
         locate,
       },
       (err) => {
