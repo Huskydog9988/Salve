@@ -42,10 +42,10 @@ const defaultLocatorSettings: DefaultLocatorSettings = {
 };
 
 const debugConfig = {
-  drawBoundingBox: true,
-  showFrequency: true,
-  drawScanline: true,
-  showPattern: true,
+  drawBoundingBox: false,
+  showFrequency: false,
+  drawScanline: false,
+  showPattern: false,
 };
 
 const defaultDecoders = ["code_39_reader", "code_39_vin_reader"];
