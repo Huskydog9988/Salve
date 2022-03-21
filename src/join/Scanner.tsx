@@ -64,11 +64,9 @@ const Scanner = ({
 }: ScannerProps) => {
   const errorCheck = useCallback(
     (results: QuaggaJSResultObject[]) => {
-      const result = results[0]
+      const result = results[0];
 
-      if (
-        !onDetected
-      ) {
+      if (!onDetected) {
         console.log("Not detected");
         return;
       }
@@ -76,10 +74,8 @@ const Scanner = ({
       const err = getMedianOfCodeErrors(result.codeResult.decodedCodes);
       // if Quagga is at least 75% certain that it read correctly, then accept the code.
       if (err < 0.25) {
-      
-      onDetected(result.codeResult.code);
+        onDetected(result.codeResult.code);
       }
-      
 
       // if (result.codeResult && result.codeResult.code !== undefined) {
       //   onDetected(result.codeResult.code);
