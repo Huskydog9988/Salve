@@ -41,6 +41,13 @@ const defaultLocatorSettings: DefaultLocatorSettings = {
   halfSample: true,
 };
 
+const debugConfig = {
+  drawBoundingBox: false,
+  showFrequency: false,
+  drawScanline: false,
+  showPattern: false,
+};
+
 const defaultDecoders = ["code_39_reader", "code_39_vin_reader"];
 
 const Scanner = ({
@@ -56,20 +63,27 @@ const Scanner = ({
   locate = true,
 }: ScannerProps) => {
   const errorCheck = useCallback(
-    (result: QuaggaJSResultObject) => {
+    (results: QuaggaJSResultObject[]) => {
+      const result = results[0]
+
       if (
-        !onDetected ||
-        result === undefined ||
-        result.codeResult === undefined
+        !onDetected
       ) {
+        console.log("Not detected");
         return;
       }
 
       const err = getMedianOfCodeErrors(result.codeResult.decodedCodes);
       // if Quagga is at least 75% certain that it read correctly, then accept the code.
       if (err < 0.25) {
-        onDetected(result.codeResult.code);
+      
+      onDetected(result.codeResult.code);
       }
+      
+
+      // if (result.codeResult && result.codeResult.code !== undefined) {
+      //   onDetected(result.codeResult.code);
+      //      }
     },
     [onDetected]
   );
@@ -124,10 +138,11 @@ const Scanner = ({
             ...(!cameraId && { facingMode }),
           },
           target: scannerRef.current,
+          singleChannel: true,
         },
         locator,
         numOfWorkers,
-        decoder: { readers: decoders, multiple: true },
+        decoder: { readers: decoders, multiple: true, debug: debugConfig },
         locate,
       },
       (err) => {
@@ -145,8 +160,10 @@ const Scanner = ({
         }
       }
     );
+    // @ts-ignore
     Quagga.onDetected(errorCheck);
     return () => {
+      // @ts-ignore
       Quagga.offDetected(errorCheck);
       Quagga.offProcessed(handleProcessed);
       Quagga.stop();
