@@ -18,7 +18,7 @@ export interface UserJoin {
 /**
  * Utility class that handles meeting related actions
  */
-export class MeetingHandler extends Handler {
+export class MeetingHandler implements Handler {
   meetings: Collection<MeetingData>;
 
   users: Collection<UserData>;
@@ -29,8 +29,6 @@ export class MeetingHandler extends Handler {
    * @param meetings Loki meeting collection
    */
   constructor(db: Loki) {
-    super();
-
     this.meetings = db.getCollection("meetings");
     this.users = db.getCollection("users");
   }

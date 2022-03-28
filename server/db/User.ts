@@ -8,7 +8,7 @@ import { Handler } from "./Handler";
 /**
  * Utility class that handles user related actions
  */
-export class UserHandler extends Handler {
+export class UserHandler implements Handler {
   meetings: Collection<MeetingData>;
 
   users: Collection<UserData>;
@@ -19,7 +19,6 @@ export class UserHandler extends Handler {
    * @param meetings Loki meeting collection
    */
   constructor(db: Loki) {
-    super();
     this.meetings = db.getCollection("meetings");
     this.users = db.getCollection("users");
   }
