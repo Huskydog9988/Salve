@@ -110,7 +110,7 @@ export default function Scan() {
           </Button>
           {/* Displays the scanner 
           
-              May not function on some computers/search engines
+              May not function on some computers/browsers
           */}
           {/* @ts-ignore */}
           <div ref={scannerRef}>
