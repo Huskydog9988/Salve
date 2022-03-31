@@ -173,6 +173,7 @@ export default function Scan() {
               value={enteredID}
               onChange={(event) => {
                 setError_id(false);
+                event.preventDefault();
                 setEnteredID(event.target.value);
               }}
             />
