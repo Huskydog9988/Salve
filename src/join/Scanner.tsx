@@ -63,8 +63,8 @@ const Scanner = ({
   locate = true,
 }: ScannerProps) => {
   const errorCheck = useCallback(
-    (results: QuaggaJSResultObject[]) => {
-      const result = results[0];
+    (result: QuaggaJSResultObject) => {
+      //const result = results[0];
 
       if (!onDetected) {
         console.log("Not detected");
@@ -138,7 +138,7 @@ const Scanner = ({
         },
         locator,
         numOfWorkers,
-        decoder: { readers: decoders, multiple: true, debug: debugConfig },
+        decoder: { readers: decoders, multiple: false, debug: debugConfig },
         locate,
       },
       (err) => {
