@@ -12,12 +12,12 @@ datasource db {
 
 model Student {
   // student id
-  id   Int     @id
+  id   String  @id
   // student name
   name String?
 
   // all the meetings the student has joined
-  Participant Participant[]
+  participants Participant[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,27 +34,27 @@ model Participant {
   late Boolean
 
   // info about the student participant
-  student   Student @relation(fields: [studentId], references: [id])
-  studentId Int
+  student   Student @relation(fields: [studentId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  studentId String
 
   // info related to meeting the participant joined
-  Meeting   Meeting? @relation(fields: [meetingId], references: [id])
-  meetingId Int?
+  meeting   Meeting? @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  meetingId Int
 }
 
 model Meeting {
   // meeting id
-  id          Int           @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   // meeting name
-  name        String
+  name         String
   // start time iso
-  startTime   String
+  startTime    String
   // late time iso
-  lateTime    String?
+  lateTime     String?
   // end time iso
-  endTime     String?
+  endTime      String?
   // participant who joined the meeting
-  participant Participant[]
+  participants Participant[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

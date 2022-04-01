@@ -1,53 +1,18 @@
-import { Collection } from "lokijs";
-import { MeetingData, MeetingDataPlus } from "../../src/MeetingData";
-import { UserData } from "../../src/UserData";
-import { Handler } from "./Handler";
-
-export interface UserJoin {
-  /**
-   * meeting id
-   */
-  meeting: string;
-
-  /**
-   * user id
-   */
-  user: string;
-}
+import { Meeting } from "@prisma/client";
+import { UserJoin } from "../../src/shared/userJoin";
+import { prisma } from "./db";
 
 /**
- * Utility class that handles meeting related actions
+ * Utility class that handles meeting related db actions
  */
-export class MeetingHandler implements Handler {
-  meetings: Collection<MeetingData>;
-
-  users: Collection<UserData>;
-
-  /**
-   * Creates a new MeetingHandler
-   * @param socket Socket connection
-   * @param meetings Loki meeting collection
-   */
-  constructor(db: Loki) {
-    this.meetings = db.getCollection("meetings");
-    this.users = db.getCollection("users");
-  }
-
-  //   /**
-  //    * Join socket to a room/meeting
-  //    * @param id room/meeting id
-  //    */
-  //   join(id: string) {
-  //     this.socket.join(id);
-  //   }
-
+export class MeetingHandler {
   /**
    * Creates a meeting
    * @param meetingData the inital data of the meeting
    */
-  create(meetingData: MeetingData) {
+  async create(meetingData: Meeting) {
     // save meeting to db
-    this.meetings.insert(meetingData);
+    await prisma.meeting.create({ data: meetingData });
 
     console.log(`Created the meeting ${meetingData.name} (${meetingData.id})`);
   }
@@ -55,52 +20,20 @@ export class MeetingHandler implements Handler {
   /**
    * Gets the specified meeting
    * @param id meeting id to get
-   * @returns meeting or null
+   * @returns meeting
    */
-  get(id: string): (MeetingData & LokiObj) | null {
+  async get(id: Meeting["id"]) {
     console.log(`Got the meeting ${id}`);
 
-    return this.meetings.findOne({ id });
-  }
-
-  /**
-   * Gets a meeting and hydrates the user data with their name
-   * @param id meeting id
-   * @returns meeting or null
-   */
-  getPlus(id: string): (MeetingDataPlus & LokiObj) | null {
-    console.log(`Got the meetingplus ${id}`);
-
-    // get meeting
-    const result: MeetingDataPlus = <MeetingDataPlus>(
-      this.meetings.findOne({ id })
-    );
-
-    // if no result
-    if (result === null) return null;
-
-    // hydrate users with their name
-    result.participants = result.participants.map((participant) => {
-      // get user
-      const user = this.users.findOne({ id: participant.id });
-
-      // if no user, set blank name
-      if (user === null) participant.name = "";
-      // else give them their proper name
-      else participant.name = user.name;
-
-      return participant;
-    });
-
-    return result as MeetingDataPlus & LokiObj;
+    return await prisma.meeting.findUnique({ where: { id } });
   }
 
   /**
    * Lists all meetings
    * @returns list of meetings
    */
-  list(): MeetingData[] {
-    const result = this.meetings.data;
+  async list() {
+    const result = await prisma.meeting.findMany();
 
     console.log(`Found ${result.length} meetings`);
 
@@ -111,11 +44,17 @@ export class MeetingHandler implements Handler {
    * Ends a meeting
    * @param id meeting id
    */
-  end(id: string) {
-    this.meetings.findAndUpdate({ id }, (meeting) => {
-      meeting.endTime = new Date().toISOString();
+  async end(id: Meeting["id"]) {
+    // this.meetings.findAndUpdate({ id }, (meeting) => {
+    //   meeting.endTime = new Date().toISOString();
+    //   return meeting;
+    // });
 
-      return meeting;
+    await prisma.meeting.update({
+      where: { id },
+      data: {
+        endTime: new Date().toISOString(),
+      },
     });
   }
 
@@ -123,9 +62,11 @@ export class MeetingHandler implements Handler {
    * Deletes a meeting
    * @param id meeting id
    */
-  delete(id: string) {
+  delete(id: Meeting["id"]) {
     // remove meeting from db
-    this.meetings.chain().find({ id }).remove();
+    // this.meetings.chain().find({ id }).remove();
+
+    prisma.meeting.delete({ where: { id } });
 
     console.log(`Deleted the meeting ${id}`);
   }
@@ -133,37 +74,83 @@ export class MeetingHandler implements Handler {
   /**
    * Tells the db a user joined a meeting
    * @param data
-   * @returns user
+   * @returns user's name
    */
-  userJoin(data: UserJoin): (UserData & LokiObj) | null {
-    let user: (UserData & LokiObj) | null = null;
+  async userJoin(data: UserJoin) {
+    // await getting both student and meeting
+    const [student, meetingData] = await Promise.all([
+      // get student
+      prisma.student.findUnique({
+        where: { id: data.user },
+        // // only get the name
+        // select: {
+        //   name: true,
+        // },
+      }),
+      // get meeting
+      prisma.meeting.findUnique({
+        where: {
+          id: data.meeting,
+        },
+      }),
+    ]);
 
-    this.meetings.findAndUpdate({ id: data.meeting }, (meeting) => {
-      const joinTime = new Date().toISOString();
-      let late = false;
+    // if meeting doesn't exist
+    if (meetingData === null) return null;
 
-      // if join time is after late time
-      if (meeting.lateTime !== undefined && joinTime > meeting.lateTime) {
-        late = true;
-      }
+    // get join time
+    const joinTime = new Date().toISOString();
+    // flag if late
+    let late = false;
 
-      const id = data.user;
-
-      // add user to participants
-      meeting.participants.push({ id, joinTime, late });
-
-      return meeting;
-    });
-
-    user = this.users.findOne({ id: data.user });
-
-    // if they have a name
-    if (user !== null) {
-      console.log(`user ${user.name} (${data.user}) joined ${data.meeting}`);
-    } else {
-      console.log(`user ${data.user} joined ${data.meeting}`);
+    // is comparing isos really the goal here?
+    // if join time is after late time
+    if (meetingData.lateTime !== null && joinTime > meetingData.lateTime) {
+      late = true;
     }
 
-    return user;
+    // make a new participant
+    await prisma.participant.create({
+      data: {
+        // jointime
+        joinTime,
+        // whether late or not
+        late,
+        // make relation to student
+        student: {
+          // if exists, link, else make user
+          connectOrCreate: {
+            // find user by id
+            where: {
+              id: data.user,
+            },
+            // create user by id
+            create: {
+              id: data.user,
+            },
+          },
+        },
+        // make connection to meeting
+        meeting: {
+          connect: {
+            id: data.meeting,
+          },
+        },
+      },
+      include: {
+        student: true,
+      },
+    });
+
+    // if they have a name
+    if (student !== null) {
+      console.log(
+        `Student ${student.name} (${data.user}) joined ${data.meeting}`
+      );
+    } else {
+      console.log(`Student ${data.user} joined ${data.meeting}`);
+    }
+
+    return student?.name;
   }
 }

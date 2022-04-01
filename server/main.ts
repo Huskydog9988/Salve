@@ -147,17 +147,17 @@ export function socketServer(server: Server, db: Loki) {
       const userId = cleanUserId(data.user);
 
       // save to db
-      const user = meetingHandler.userJoin({
+      const name = meetingHandler.userJoin({
         meeting: data.meeting,
         user: userId,
       });
 
       // if user has a name
-      if (user !== null) {
+      if (name !== null) {
         // tell all
-        socket.broadcast.emit("meeting:user:join:result", user.name);
+        socket.broadcast.emit("meeting:user:join:result", name);
         // send back to client
-        socket.emit("meeting:user:join:result", user.name);
+        socket.emit("meeting:user:join:result", name);
       } else {
         // if no name
 
