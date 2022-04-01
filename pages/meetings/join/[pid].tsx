@@ -87,7 +87,11 @@ export default function Scan() {
 
   //Adds meeting to database
   function endMeeting(event: React.MouseEvent<HTMLButtonElement>) {
+    //Prevents page from reloading
     event.preventDefault();
+    //Disables scanner after meeting is ended
+    setScanning(false);
+    //Emit to server to end and log meeting
     socket.emit("meeting:end", pid);
   }
 
