@@ -1,4 +1,4 @@
-export interface UserJoin {
+export interface StudentJoin {
   /**
    * meeting id
    */

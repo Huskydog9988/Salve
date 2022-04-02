@@ -1,11 +1,18 @@
 import { Meeting } from "@prisma/client";
-import { UserJoin } from "../../src/shared/userJoin";
+import { StudentJoin } from "../../src/shared/studentJoin";
 import { prisma } from "./db";
+import { ParticipantHandler } from "./Participant";
+import { StudentHandler } from "./Student";
 
 /**
  * Utility class that handles meeting related db actions
  */
 export class MeetingHandler {
+  constructor(
+    private studentHandler: StudentHandler,
+    private participantHandler: ParticipantHandler
+  ) {}
+
   /**
    * Creates a meeting
    * @param meetingData the inital data of the meeting
@@ -33,7 +40,9 @@ export class MeetingHandler {
    * @returns list of meetings
    */
   async list() {
-    const result = await prisma.meeting.findMany();
+    const result = await prisma.meeting.findMany({
+      include: { participants: true },
+    });
 
     console.log(`Found ${result.length} meetings`);
 
@@ -76,23 +85,13 @@ export class MeetingHandler {
    * @param data
    * @returns user's name
    */
-  async userJoin(data: UserJoin) {
+  async userJoin(data: StudentJoin) {
     // await getting both student and meeting
     const [student, meetingData] = await Promise.all([
       // get student
-      prisma.student.findUnique({
-        where: { id: data.user },
-        // // only get the name
-        // select: {
-        //   name: true,
-        // },
-      }),
+      this.studentHandler.get(data.user),
       // get meeting
-      prisma.meeting.findUnique({
-        where: {
-          id: data.meeting,
-        },
-      }),
+      this.get(data.meeting),
     ]);
 
     // if meeting doesn't exist
@@ -109,37 +108,14 @@ export class MeetingHandler {
       late = true;
     }
 
-    // make a new participant
-    await prisma.participant.create({
-      data: {
-        // jointime
-        joinTime,
-        // whether late or not
-        late,
-        // make relation to student
-        student: {
-          // if exists, link, else make user
-          connectOrCreate: {
-            // find user by id
-            where: {
-              id: data.user,
-            },
-            // create user by id
-            create: {
-              id: data.user,
-            },
-          },
-        },
-        // make connection to meeting
-        meeting: {
-          connect: {
-            id: data.meeting,
-          },
-        },
-      },
-      include: {
-        student: true,
-      },
+    await this.participantHandler.create({
+      // jointime
+      joinTime,
+      // whether late or not
+      late,
+
+      studentId: data.user,
+      meetingId: data.meeting,
     });
 
     // if they have a name

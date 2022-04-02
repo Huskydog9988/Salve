@@ -1,5 +1,4 @@
-import { Meeting, Participant } from "@prisma/client";
-import { StudentJoin } from "../../src/shared/studentJoin";
+import { ParticipantCreate } from "../../src/shared/participantCreate";
 import { prisma } from "./db";
 
 /**
@@ -10,9 +9,34 @@ export class ParticipantHandler {
    * Creates a new meeting participant
    * @param participant participant info
    */
-  async create(participant: Participant) {
-    await prisma.participant.create({
-      data: participant,
+  async create(participantData: ParticipantCreate) {
+    const participant = await prisma.participant.create({
+      data: {
+        joinTime: participantData.joinTime,
+
+        late: participantData.late,
+
+        // make relation to student
+        student: {
+          // if exists, link, else make user
+          connectOrCreate: {
+            // find user by id
+            where: {
+              id: participantData.studentId,
+            },
+            // create user by id
+            create: {
+              id: participantData.studentId,
+            },
+          },
+        },
+        // make connection to meeting
+        meeting: {
+          connect: {
+            id: participantData.meetingId,
+          },
+        },
+      },
       //   idk but this is needed
       include: {
         student: true,
@@ -28,7 +52,9 @@ export class ParticipantHandler {
    * Lists all participants
    */
   async list() {
-    const result = await prisma.participant.findMany();
+    const result = await prisma.participant.findMany({
+      include: { meeting: true, student: true },
+    });
 
     console.log(`Found ${result.length} participants`);
   }

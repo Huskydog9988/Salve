@@ -1,4 +1,4 @@
-import { StudentCreate } from "../../src/shared/userCreate";
+import { StudentCreate } from "../../src/shared/studentCreate";
 import { prisma } from "./db";
 
 /**
