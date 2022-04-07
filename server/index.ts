@@ -2,8 +2,8 @@ import { createServer } from "http";
 import { parse } from "url";
 import next from "next";
 // import loki from "lokijs";
-import { db } from "./db";
 import { socketServer } from "./main";
+import { prisma } from "./db";
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
@@ -29,7 +29,7 @@ app.prepare().then(() => {
   });
 
   // run the socket server
-  socketServer(server, db);
+  socketServer(server);
 });
 
 // handle graceful exits
@@ -40,7 +40,7 @@ process.on("SIGTERM", () => {
   });
 
   // kill db
-  db.close(() => {
-    console.log("Shutdown Lokijs db");
+  prisma.$disconnect().then(() => {
+    console.log("Shutdown prisma");
   });
 });

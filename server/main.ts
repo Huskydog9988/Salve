@@ -4,18 +4,23 @@ import { instrument } from "@socket.io/admin-ui";
 import { MeetingHandler, prisma, StudentHandler } from "./db";
 import { cleanUserId } from "./utils";
 import { StudentJoin } from "../src/shared/studentJoin";
-import { Meeting } from "@prisma/client";
+import { Meeting, Student } from "@prisma/client";
 import { StudentCreate } from "../src/shared/studentCreate";
 import { ParticipantHandler } from "./db/Participant";
+import { MeetingCreateClient } from "../src/shared/meetingCreate";
 
 /**
  * The main server code
  * @param db loki db class
  */
-export function socketServer(server: Server, db: Loki) {
+export function socketServer(server: Server) {
   // create websocket server
   const io = new SocketIOServer(server, {
     // serveClient: false,
+    cors: {
+      origin: ["https://admin.socket.io"],
+      credentials: true,
+    },
   });
   // enable admin ui on http://admin.socket.io/
   instrument(io, {
@@ -50,36 +55,41 @@ export function socketServer(server: Server, db: Loki) {
     /**
      * Allows client to specify which room to join
      */
-    socket.on("join", (id) => {
+    socket.on("join", (id: Meeting["id"]) => {
       // meetingHandler.join(id);
 
-      socket.join(id);
+      socket.join(`${id}`);
     });
 
     /**
      * Allows client to specify which room to leave
      */
-    socket.on("leave", (id: string) => {
-      socket.leave(id);
+    socket.on("leave", (id: Meeting["id"]) => {
+      socket.leave(`${id}`);
     });
 
     /**
      * creates a meetings
      */
-    socket.on("meeting:create", async (meetingData: Meeting) => {
+    socket.on("meeting:create", async (meetingData: MeetingCreateClient) => {
+      const time = new Date().toISOString();
+
       // create the meeting
-      await meetingHandler.create(meetingData);
+      const result = await meetingHandler.create({
+        ...meetingData,
+        startTime: time,
+      });
 
       // send event that meeting has been created
-      socket.emit("meeting:create:result", meetingData.id);
+      socket.emit("meeting:create:result", result.id);
       // send same event to all in meetings room
-      socket.in("meetings").emit("meeting:create:result", meetingData.id);
+      socket.in("meetings").emit("meeting:create:result", result.id);
     });
 
     /**
      * Gets a specific meeting
      */
-    socket.on("meeting:get", async (id: number) => {
+    socket.on("meeting:get", async (id: Meeting["id"]) => {
       const meeting = await meetingHandler.get(id);
 
       // send result back
@@ -99,7 +109,7 @@ export function socketServer(server: Server, db: Loki) {
     /**
      * End a meeting
      */
-    socket.on("meeting:end", async (id) => {
+    socket.on("meeting:end", async (id: Meeting["id"]) => {
       await meetingHandler.end(id);
 
       // notify the client that the meeting has been ended
@@ -111,7 +121,7 @@ export function socketServer(server: Server, db: Loki) {
     /**
      * Delete a meeting
      */
-    socket.on("meeting:delete", async (id) => {
+    socket.on("meeting:delete", async (id: Meeting["id"]) => {
       await meetingHandler.delete(id);
 
       // send event that meeting has been deleted
@@ -141,7 +151,7 @@ export function socketServer(server: Server, db: Loki) {
       });
 
       // if user has a name
-      if (name !== null) {
+      if (name !== null && name !== undefined) {
         // tell all
         socket.broadcast.emit("meeting:user:join:result", name);
         // send back to client
@@ -159,20 +169,20 @@ export function socketServer(server: Server, db: Loki) {
     /**
      * Deletes a user
      */
-    socket.on("user:delete", (user) => {
-      studentHandler.delete(user.id);
+    socket.on("user:delete", async (id: Student["id"]) => {
+      await studentHandler.delete(id);
 
       // send event that meeting has been deleted
-      socket.emit("user:delete:result", user.id);
+      socket.emit("user:delete:result", id);
       // tell all in users too
-      socket.in("users").emit("user:delete:result", user.id);
+      socket.in("users").emit("user:delete:result", id);
     });
 
     /**
      * Creates a user
      */
-    socket.on("user:create", (user: StudentCreate) => {
-      studentHandler.create(user);
+    socket.on("user:create", async (user: StudentCreate) => {
+      await studentHandler.create(user);
 
       // tell client user has been creates
       socket.emit("user:create:result", user.id);
@@ -183,8 +193,8 @@ export function socketServer(server: Server, db: Loki) {
     /**
      * Gets all users
      */
-    socket.on("user:list", () => {
-      const users = studentHandler.list();
+    socket.on("user:list", async () => {
+      const users = await studentHandler.list();
 
       // send result to client
       socket.emit("user:list:result", users);
@@ -193,8 +203,8 @@ export function socketServer(server: Server, db: Loki) {
     /**
      * Gets a specific user
      */
-    socket.on("user:get", (id: string) => {
-      const user = studentHandler.get(id);
+    socket.on("user:get", async (id: Student["id"]) => {
+      const user = await studentHandler.get(id);
 
       // send result to client
       socket.emit("user:get:result", user);

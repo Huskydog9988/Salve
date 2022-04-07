@@ -57,6 +57,8 @@ export class ParticipantHandler {
     });
 
     console.log(`Found ${result.length} participants`);
+
+    return result;
   }
 
   /**
@@ -66,7 +68,12 @@ export class ParticipantHandler {
    */
   async get(id: number) {
     console.log(`Got the participant ${id}`);
-    return await prisma.participant.findUnique({ where: { id } });
+    return await prisma.participant.findUnique({
+      where: { id },
+      include: {
+        student: true,
+      },
+    });
   }
 
   /**

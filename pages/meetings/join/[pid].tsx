@@ -8,8 +8,11 @@ import dynamic from "next/dynamic";
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { MeetingDataPlus } from "../../../src/MeetingData";
 import { useEffect, useState, useRef } from "react";
+import { MeetingAndParticipants } from "../../../src/shared/meetingAndParticipants";
+import { nullishString } from "../../../src/shared/nullishString";
+import { Meeting } from "@prisma/client";
+import { StudentJoin } from "../../../src/shared/studentJoin";
 
 const Scanner = dynamic(() => import("../../../src/join/Scanner"));
 
@@ -25,7 +28,7 @@ export default function Scan() {
   const scannerRef = useRef<Element | string | undefined>(undefined);
 
   const router = useRouter();
-  const { pid } = router.query;
+  const pid = parseInt(router.query.pid as string);
 
   function pushUsers(id: string) {
     // setUsers((prevUsers) => new Set([...users, id]));
@@ -34,37 +37,39 @@ export default function Scan() {
 
   //Display information of added users in meeting
   useEffect(() => {
-    socket.on(
-      "meeting:getPlus:result",
-      (result: (MeetingDataPlus & unknown) | null) => {
-        if (result === null) return;
+    socket.on("meeting:get:result", (result: MeetingAndParticipants | null) => {
+      if (result === null) return;
 
-        setUsers(
-          new Set(
-            result.participants.map((user) => {
-              return user.name;
-            })
-          )
-        );
-      }
-    );
+      setUsers(
+        new Set(
+          result.participants.map((user) => {
+            return nullishString(user.student.name, user.studentId);
+          })
+        )
+      );
+    });
   }, []);
   //Adding user's name (if not avalible, their id) to meeting when confirmed they are not already joined
   useEffect(() => {
-    socket.on("meeting:user:join:result", (user) => {
-      pushUsers(user);
+    /**
+     * identifier can be a username or a user's id
+     */
+    socket.on("meeting:user:join:result", (identifier: string) => {
+      pushUsers(identifier);
     });
   }, []);
   useEffect(() => {
     socket.emit("join", pid);
-    socket.emit("meeting:getPlus", pid);
+    socket.emit("meeting:get", pid);
   }, [pid]);
 
   function saveUser(id: string) {
-    socket.emit("meeting:user:join", {
+    const data: StudentJoin = {
       meeting: pid,
       user: id,
-    });
+    };
+
+    socket.emit("meeting:user:join", data);
   }
   //Removes extra identification letter found at begining of ID
   function detected(result: string) {
@@ -93,7 +98,9 @@ export default function Scan() {
 
   //Moves user to meeting's info page after confirmed that user ended moving
   useEffect(() => {
-    socket.on("meeting:end:result", (meetingID) => {
+    socket.on("meeting:end:result", (meetingID: Meeting["id"]) => {
+      if (meetingID !== pid) return;
+
       socket.emit("leave", pid);
 
       router.push(`/meetings/info/${pid}`);

@@ -1,7 +1,7 @@
 import { Meeting, Student } from "@prisma/client";
 
 /**
- * Enable participant handler create method to take args that enable creating relations
+ * Data needed to enable participant handler to create a participant
  */
 export interface ParticipantCreate {
   /**

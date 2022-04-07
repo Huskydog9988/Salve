@@ -8,13 +8,14 @@ import { socket } from "../../src/socket";
 import { Grid, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
-import { UserData } from "../../src/UserData";
 import { useEffect, useState, MouseEvent } from "react";
+import { Student } from "@prisma/client";
+import { StudentCreate } from "../../src/shared/studentCreate";
 
 const Home: NextPage = () => {
   const router = useRouter();
 
-  const [users, setUsers] = useState<UserData[]>([]);
+  const [users, setUsers] = useState<Student[]>([]);
 
   const [name, setName] = useState("");
   const [id, setId] = useState("");
@@ -37,7 +38,7 @@ const Home: NextPage = () => {
     }
 
     if (id.length >= 1 && name.length >= 1) {
-      const user: UserData = {
+      const user: StudentCreate = {
         id,
         name,
       };
@@ -52,19 +53,19 @@ const Home: NextPage = () => {
 
   //Reloads page after user added
   useEffect(() => {
-    socket.on("user:create:result", (id) => {
+    socket.on("user:create:result", (id: Student["id"]) => {
       setCreatingUser(false);
       router.reload();
     });
   }, [router]);
   //Get users when page loaded
   useEffect(() => {
-    socket.on("user:list:result", (result) => {
+    socket.on("user:list:result", (result: Student[]) => {
       setUsers(result);
     });
   }, []);
   useEffect(() => {
-    socket.on("user:delete:result", (id) => {
+    socket.on("user:delete:result", (id: Student["id"]) => {
       router.reload();
     });
   }, [router]);

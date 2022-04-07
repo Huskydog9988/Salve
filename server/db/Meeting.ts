@@ -1,4 +1,6 @@
 import { Meeting } from "@prisma/client";
+import { MeetingAndParticipants } from "../../src/shared/meetingAndParticipants";
+import { MeetingCreateServer } from "../../src/shared/meetingCreate";
 import { StudentJoin } from "../../src/shared/studentJoin";
 import { prisma } from "./db";
 import { ParticipantHandler } from "./Participant";
@@ -17,11 +19,13 @@ export class MeetingHandler {
    * Creates a meeting
    * @param meetingData the inital data of the meeting
    */
-  async create(meetingData: Meeting) {
+  async create(meetingData: MeetingCreateServer) {
     // save meeting to db
-    await prisma.meeting.create({ data: meetingData });
+    const result = await prisma.meeting.create({ data: meetingData });
 
-    console.log(`Created the meeting ${meetingData.name} (${meetingData.id})`);
+    console.log(`Created the meeting ${meetingData.name} (${result.id})`);
+
+    return result;
   }
 
   /**
@@ -29,19 +33,35 @@ export class MeetingHandler {
    * @param id meeting id to get
    * @returns meeting
    */
-  async get(id: Meeting["id"]) {
+  async get(id: Meeting["id"]): Promise<MeetingAndParticipants | null> {
     console.log(`Got the meeting ${id}`);
 
-    return await prisma.meeting.findUnique({ where: { id } });
+    const result = await prisma.meeting.findUnique({
+      where: { id },
+      include: {
+        participants: {
+          include: {
+            student: true,
+          },
+        },
+      },
+    });
+    return result;
   }
 
   /**
    * Lists all meetings
    * @returns list of meetings
    */
-  async list() {
+  async list(): Promise<MeetingAndParticipants[]> {
     const result = await prisma.meeting.findMany({
-      include: { participants: true },
+      include: {
+        participants: {
+          include: {
+            student: true,
+          },
+        },
+      },
     });
 
     console.log(`Found ${result.length} meetings`);

@@ -7,9 +7,10 @@ import TableRow from "@mui/material/TableRow";
 import { DateTime, Duration } from "luxon";
 import React from "react";
 import ButtonLink from "./ButtonLink";
-import { MeetingData } from "./MeetingData";
+import { MeetingAndParticipants } from "./shared/meetingAndParticipants";
+
 interface HomeTableProps {
-  meetings: MeetingData[];
+  meetings: MeetingAndParticipants[];
 }
 
 export default function MeetingTable({ meetings }: HomeTableProps) {

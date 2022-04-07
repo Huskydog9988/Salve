@@ -6,10 +6,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { DateTime, Duration } from "luxon";
 import Alert from "@mui/material/Alert";
-import { UserMeetingDataPlus } from "./MeetingData";
+import { ParticipantAndStudent } from "./shared/meetingAndParticipants";
+import { nullishString } from "./shared/nullishString";
 
 interface MeetingTableProps {
-  users: UserMeetingDataPlus[];
+  users: ParticipantAndStudent[];
   lateTime: DateTime | undefined;
 }
 /**
@@ -58,7 +59,7 @@ export default function MeetingsTable({ users, lateTime }: MeetingTableProps) {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {user.name}
+                  {nullishString(user.student.name, user.studentId)}
                 </TableCell>
                 <TableCell align="left">{user.id}</TableCell>
                 {(() => {
