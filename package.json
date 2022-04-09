@@ -9,7 +9,9 @@
     "build:check": "tsc --noEmit && tsc --project tsconfig.server.json --noEmit",
     "pruneDeps": "node scripts/yarn-prune.js",
     "start": "NODE_ENV=production node dist/index.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "setup": "prisma db push"
   },
   "dependencies": {
     "@emotion/cache": "^11.7.1",
@@ -20,7 +22,7 @@
     "@mui/icons-material": "^5.4.1",
     "@mui/lab": "^5.0.0-alpha.69",
     "@mui/material": "^5.4.1",
-    "@prisma/client": "^3.11.1",
+    "@prisma/client": "^3.12.0",
     "@socket.io/admin-ui": "^0.2.0",
     "clsx": "^1.1.1",
     "lokijs": "^1.5.12",
@@ -47,7 +49,7 @@
     "eslint": "8.8.0",
     "eslint-config-next": "12.0.10",
     "nodemon": "^2.0.15",
-    "prisma": "^3.11.1",
+    "prisma": "^3.12.0",
     "ts-node": "^10.7.0",
     "typescript": "4.5.5"
   },
