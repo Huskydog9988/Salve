@@ -13,7 +13,7 @@ interface HomeTableProps {
 function deleteUser(event: React.MouseEvent<HTMLButtonElement>, user: Student) {
   event.preventDefault();
   console.log(`Deleted ${user.id}`);
-  socket.emit("user:delete", user);
+  socket.emit("user:delete", user.id);
 }
 
 export default function HomeTable({ users }: HomeTableProps) {
