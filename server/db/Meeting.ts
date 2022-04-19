@@ -91,11 +91,11 @@ export class MeetingHandler {
    * Deletes a meeting
    * @param id meeting id
    */
-  delete(id: Meeting["id"]) {
+  async delete(id: Meeting["id"]) {
     // remove meeting from db
     // this.meetings.chain().find({ id }).remove();
 
-    prisma.meeting.delete({ where: { id } });
+    await prisma.meeting.delete({ where: { id } });
 
     console.log(`Deleted the meeting ${id}`);
   }

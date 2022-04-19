@@ -122,6 +122,7 @@ export function socketServer(server: Server) {
      * Delete a meeting
      */
     socket.on("meeting:delete", async (id: Meeting["id"]) => {
+      // console.log(`Requested a delete (server) of ${id}`);
       await meetingHandler.delete(id);
 
       // send event that meeting has been deleted

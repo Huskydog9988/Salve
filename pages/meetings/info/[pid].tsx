@@ -69,6 +69,7 @@ const Home: NextPage = () => {
   //Runs when meeting delete is verified
   function deleteMeeting(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
+    // console.log(`Requested a delete (client) of ${pid}`);
     socket.emit("meeting:delete", pid);
   }
 

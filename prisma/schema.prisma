@@ -34,11 +34,11 @@ model Participant {
   late Boolean
 
   // info about the student participant
-  student   Student @relation(fields: [studentId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   studentId String
 
   // info related to meeting the participant joined
-  meeting   Meeting? @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  meeting   Meeting? @relation(fields: [meetingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   meetingId Int
 }
 
