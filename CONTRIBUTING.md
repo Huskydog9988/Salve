@@ -14,7 +14,7 @@
 yarn install
 ```
 
-3. Add a `.env` file to the `prisma folder`
+3. Add a `.env` file to the `prisma` folder
 4. Add the following line to the folder:
 
 ```env
