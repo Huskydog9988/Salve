@@ -3,19 +3,19 @@ import type { NextPage } from "next";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { MeetingData } from "../../src/MeetingData";
 import ButtonLink from "../../src/ButtonLink";
 import { socket } from "../../src/socket";
 import dynamic from "next/dynamic";
+import { MeetingAndParticipants } from "../../src/shared/meetingAndParticipants";
 
 const MeetingsTable = dynamic(() => import("../../src/MeetingsTable"));
 
 const Home: NextPage = () => {
-  const [meetings, setMeetings] = useState<MeetingData[]>([]);
+  const [meetings, setMeetings] = useState<MeetingAndParticipants[]>([]);
 
   // Gets all meetings from the database for display
   useEffect(() => {
-    socket.on("meeting:list:result", (result) => {
+    socket.on("meeting:list:result", (result: MeetingAndParticipants[]) => {
       setMeetings(result);
     });
   }, []);

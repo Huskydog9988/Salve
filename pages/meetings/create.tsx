@@ -8,11 +8,12 @@ import TimePicker from "@mui/lab/TimePicker";
 // import LoadingButton from "@mui/lab/LoadingButton";
 import ButtonLink from "../../src/ButtonLink";
 import { socket } from "../../src/socket";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import { DateTime } from "luxon";
-import { MeetingData } from "../../src/MeetingData";
 import dynamic from "next/dynamic";
 import { Grid } from "@mui/material";
+import { Meeting } from "@prisma/client";
+import { MeetingCreateClient } from "../../src/shared/meetingCreate";
 
 const LoadingButton = dynamic(() => import("@mui/lab/LoadingButton"));
 
@@ -25,7 +26,7 @@ export default function Scan() {
   const [error_name, setError_name] = useState(false);
 
   useEffect(() => {
-    socket.on("meeting:create:result", (meetingId: string) => {
+    socket.on("meeting:create:result", (meetingId: Meeting["id"]) => {
       // infrom the user we have made the meeting
       setCreatingMeeting(false);
 
@@ -44,16 +45,10 @@ export default function Scan() {
       // notify the user we are making the meeting
       setCreatingMeeting(true);
 
-      const id = uuidv4();
+      // const id = uuidv4();
 
-      const meeting: MeetingData = {
-        id,
+      const meeting: MeetingCreateClient = {
         name,
-        // set on the server but still need to set it
-        startTime: new Date().toISOString(),
-        participants: [],
-        lateTime: undefined,
-        endTime: undefined,
       };
 
       // clean date from component

@@ -1,4 +1,3 @@
 export * from "./Meeting";
-export * from "./User";
-export * from "./Handler";
+export * from "./Student";
 export * from "./db";

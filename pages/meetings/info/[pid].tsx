@@ -14,15 +14,20 @@ import MeetingTable from "../../../src/MeetingTable";
 import { socket } from "../../../src/socket";
 import { useRouter } from "next/router";
 import ButtonLink from "../../../src/ButtonLink";
-import { MeetingDataPlus, UserMeetingDataPlus } from "../../../src/MeetingData";
 import { useEffect, useState } from "react";
+import { Meeting } from "@prisma/client";
+import {
+  MeetingAndParticipants,
+  ParticipantAndStudent,
+} from "../../../src/shared/meetingAndParticipants";
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const { pid } = router.query;
+  // const { pid } = router.query;
+  const pid = parseInt(router.query.pid as string);
 
   //Meeting info
-  const [users, setUsers] = useState<UserMeetingDataPlus[]>([]);
+  const [users, setUsers] = useState<ParticipantAndStudent[]>([]);
   const [lateTime, setLateTime] = useState<DateTime | undefined>(undefined);
   const [endTime, setEndTime] = useState<DateTime | undefined>(undefined);
   const [startTime, setStartTime] = useState(DateTime.now());
@@ -33,41 +38,38 @@ const Home: NextPage = () => {
 
   //When meeting is deleted, move user to meeting list
   useEffect(() => {
-    socket.on("meeting:delete:result", (meetingID) => {
+    socket.on("meeting:delete:result", (meetingID: Meeting["id"]) => {
       router.push(`/meetings/list`);
     });
   }, [router]);
 
   //When receiving data for the meeting, format and display it on the screen
   useEffect(() => {
-    socket.on(
-      "meeting:getPlus:result",
-      (result: (MeetingDataPlus & unknown) | null) => {
-        if (result === null) return;
+    socket.on("meeting:get:result", (result: MeetingAndParticipants | null) => {
+      if (result === null) return;
 
-        setUsers(result.participants);
+      setUsers(result.participants);
 
-        console.log(result.participants);
-        //If a time is specified, display its information
-        if (result.lateTime !== undefined)
-          setLateTime(DateTime.fromISO(result.lateTime));
-        if (result.endTime !== undefined)
-          setEndTime(DateTime.fromISO(result.endTime));
+      console.log(result.participants);
+      //If a time is specified, display its information
+      if (result.lateTime !== null)
+        setLateTime(DateTime.fromISO(result.lateTime));
+      if (result.endTime !== null) setEndTime(DateTime.fromISO(result.endTime));
 
-        //Set start time and name of meeting
-        setStartTime(DateTime.fromISO(result.startTime));
-        setName(result.name);
-      }
-    );
+      //Set start time and name of meeting
+      setStartTime(DateTime.fromISO(result.startTime));
+      setName(result.name);
+    });
   }, []);
 
   useEffect(() => {
-    socket.emit("meeting:getPlus", pid);
+    socket.emit("meeting:get", pid);
   }, [pid]);
 
   //Runs when meeting delete is verified
   function deleteMeeting(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
+    // console.log(`Requested a delete (client) of ${pid}`);
     socket.emit("meeting:delete", pid);
   }
 

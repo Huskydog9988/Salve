@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  // student id
+  id   String  @id
+  // student name
+  name String?
+
+  // all the meetings the student has joined
+  participants Participant[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Participant {
+  // participant id
+  id Int @id @default(autoincrement())
+
+  // join time iso
+  joinTime String
+
+  // whether participant was late to the meeting
+  late Boolean
+
+  // info about the student participant
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  studentId String
+
+  // info related to meeting the participant joined
+  meeting   Meeting? @relation(fields: [meetingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  meetingId Int
+}
+
+model Meeting {
+  // meeting id
+  id           Int           @id @default(autoincrement())
+  // meeting name
+  name         String
+  // start time iso
+  startTime    String
+  // late time iso
+  lateTime     String?
+  // end time iso
+  endTime      String?
+  // participant who joined the meeting
+  participants Participant[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

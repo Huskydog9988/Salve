@@ -6,23 +6,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Button } from "@mui/material";
 import { socket } from "./socket";
-
-// Meeting Info passed to table
-export interface UserInfo {
-  name: string;
-  id: string;
-}
-
+import { Student } from "@prisma/client";
 interface HomeTableProps {
-  users: UserInfo[];
+  users: Student[];
 }
-function deleteUser(
-  event: React.MouseEvent<HTMLButtonElement>,
-  user: UserInfo
-) {
+function deleteUser(event: React.MouseEvent<HTMLButtonElement>, user: Student) {
   event.preventDefault();
   console.log(`Deleted ${user.id}`);
-  socket.emit("user:delete", user);
+  socket.emit("user:delete", user.id);
 }
 
 export default function HomeTable({ users }: HomeTableProps) {
