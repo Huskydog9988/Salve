@@ -129,8 +129,8 @@ export default function Scan() {
               className="drawingBuffer"
               style={{
                 position: "absolute",
-                // top: "50px",
-                // left: '0px',
+                top: "35px",
+                left: '-5px',
                 // height: '100%',
                 // width: '100%',
                 border: "3px solid #0059B2",
