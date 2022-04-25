@@ -27,14 +27,16 @@ export default function MeetingTable({ meetings }: HomeTableProps) {
           <TableRow>
             <TableCell>Meeting Name</TableCell>
             <TableCell align="left">Date</TableCell>
-            <TableCell align="left">Meeting Length</TableCell>
+            <TableCell align="left" >Meeting Length</TableCell>
+            
             <TableCell align="left">Amount of People</TableCell>
             <TableCell align="left"></TableCell>
+            
           </TableRow>
         </TableHead>
         <TableBody>
           {/* loop through rows and make a row from it */}
-          {meetings.map((meeting) => {
+          {meetings.map((meeting: MeetingAndParticipants) => {
             const end = DateTime.fromISO(meeting.endTime || emEndTime);
             const start = DateTime.fromISO(meeting.startTime);
             const diff = end.diff(start);
@@ -44,7 +46,9 @@ export default function MeetingTable({ meetings }: HomeTableProps) {
               "hh:mm:ss"
             );
 
-            const link = `/meetings/info/${meeting.id}`;
+            const linkInfo = `/meetings/info/${meeting.id}`;
+            
+            const linkJoin = `/meetings/join/${meeting.id}`;
             //Creats a table of meeting with Name, Time, Length, and Member Amount
             return (
               <TableRow
@@ -63,10 +67,23 @@ export default function MeetingTable({ meetings }: HomeTableProps) {
                 <TableCell align="left">
                   {meeting.participants.length}
                 </TableCell>
-                <TableCell align="left">
-                  {/* Button that links to info page for the meeting */}
-                  <ButtonLink link={link}>More Info</ButtonLink>
-                </TableCell>
+                
+                {/* Button that links to info page for the meeting or to the meeting if it is live*/}
+                {(() => {
+                  if (meeting.endTime == null || meeting.endTime.length === 0) {
+                    return (
+                      <TableCell align="center">
+                        <ButtonLink variant="contained" link={linkJoin}>Join Live</ButtonLink>
+                      </TableCell>
+                    );
+                  }else{
+                    return (
+                      <TableCell align="center">
+                        <ButtonLink link={linkInfo}>More Info</ButtonLink>
+                      </TableCell>
+                    );
+                  }
+                })()}
               </TableRow>
             );
           })}
