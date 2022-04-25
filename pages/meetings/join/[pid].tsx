@@ -130,7 +130,7 @@ export default function Scan() {
               style={{
                 position: "absolute",
                 top: "35px",
-                left: '-5px',
+                left: "-5px",
                 // height: '100%',
                 // width: '100%',
                 border: "3px solid #0059B2",
