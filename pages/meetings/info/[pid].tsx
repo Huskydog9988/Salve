@@ -114,8 +114,8 @@ const Home: NextPage = () => {
           )}
         </>
         <Grid container>
-          <Grid item xs={3}></Grid>
-          <Grid item xs={6}>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={10}>
             {/*Creates table of users in meeting and times*/}
             <MeetingTable users={users} lateTime={lateTime} />
           </Grid>

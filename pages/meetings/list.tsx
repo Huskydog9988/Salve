@@ -41,7 +41,8 @@ const Home: NextPage = () => {
         <ButtonLink link="/">Go to the home page</ButtonLink>
         <ButtonLink link="/meetings/create">Create a meeting</ButtonLink>
         {/* Displays all of the meetings in table */}
-        <MeetingsTable meetings={meetings} />
+
+        <MeetingsTable meetingData={meetings} />
       </Box>
     </Container>
   );
