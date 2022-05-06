@@ -8,6 +8,7 @@ import { Meeting, Student } from "@prisma/client";
 import { StudentCreate } from "../src/shared/studentCreate";
 import { ParticipantHandler } from "./db/Participant";
 import { MeetingCreateClient } from "../src/shared/meetingCreate";
+import { EditUserName } from "../src/shared/editUser";
 
 /**
  * The main server code
@@ -177,6 +178,18 @@ export function socketServer(server: Server) {
       socket.emit("user:delete:result", id);
       // tell all in users too
       socket.in("users").emit("user:delete:result", id);
+    });
+
+    /**
+     * Edits a user
+     */
+     socket.on("user:edit", async (data: EditUserName) => {
+      await studentHandler.edit(data);
+
+      // send event that meeting has been deleted
+      socket.emit("user:edit:result", data.id);
+      // tell all in users too
+      socket.in("users").emit("user:edit:result", data.id);
     });
 
     /**

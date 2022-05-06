@@ -1,7 +1,13 @@
 import * as React from "react";
-import { DataGrid, GridCellParams, GridColDef, GridValueGetterParams, MuiEvent } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  GridValueGetterParams,
+  MuiEvent,
+} from "@mui/x-data-grid";
 import { MeetingAndParticipants } from "./shared/meetingAndParticipants";
-import ButtonLink from "./ButtonLink";
+import { DateTime } from "luxon";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", type: "number", width: 100 },
@@ -11,18 +17,36 @@ const columns: GridColDef[] = [
     width: 230,
   },
   {
+    field: "date",
+    headerName: "Date",
+    width: 150,
+    valueGetter: (params: GridValueGetterParams) =>
+      `${DateTime.fromISO(params.row.startTime).toLocaleString(
+        DateTime.DATE_MED
+      )}`,
+  },
+  {
     field: "startTime",
     headerName: "Start Time",
-    width: 230,
+    width: 150,
+    valueGetter: (params: GridValueGetterParams) =>
+      `${DateTime.fromISO(params.row.startTime).toLocaleString(
+        DateTime.TIME_24_WITH_SECONDS
+      )}`,
   },
+
   {
     field: "endTime",
     headerName: "End Time",
-    width: 230,
+    width: 150,
+    valueGetter: (params: GridValueGetterParams) =>
+      `${DateTime.fromISO(params.row.endTime).toLocaleString(
+        DateTime.TIME_24_WITH_SECONDS
+      )}`,
   },
   {
     field: "participants",
-    headerName: "Amount of Participants",
+    headerName: "Participants",
     width: 160,
     valueGetter: (params: GridValueGetterParams) =>
       `${params.row.participants.length}`,
@@ -35,13 +59,11 @@ const columns: GridColDef[] = [
       let link;
 
       if (params.row.endTime !== null) {
-        return 'Info';
+        return "Info";
       } else {
-        return 'Live';
+        return "Live";
       }
     },
-    
-    
   },
 ];
 
@@ -50,8 +72,6 @@ interface MeetingTableProps {
 }
 
 export default function MeetingsTable({ meetingData }: MeetingTableProps) {
-
-  
   // const rows: number | string | null[] = [];
 
   // let x: number;
@@ -89,7 +109,10 @@ export default function MeetingsTable({ meetingData }: MeetingTableProps) {
         hideFooter
         hideFooterPagination
         hideFooterSelectedRowCount
-        onCellClick={(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
+        onCellClick={(
+          params: GridCellParams,
+          event: MuiEvent<React.MouseEvent>
+        ) => {
           event.defaultMuiPrevented = true;
           let link;
           if (params.row.endTime !== null) {

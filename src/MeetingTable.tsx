@@ -1,5 +1,5 @@
 
-import { DateTime, Duration } from "luxon";
+import { DateTime } from "luxon";
 import { ParticipantAndStudent } from "./shared/meetingAndParticipants";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
 import { GridValueGetterParams } from "@mui/x-data-grid/models/params";
@@ -26,7 +26,10 @@ const columns: GridColDef[] = [
   {
     field: "joinTime",
     headerName: "Join Time",
-    width: 230,
+    width: 230,valueGetter: (params: GridValueGetterParams) =>
+    `${DateTime.fromISO(params.row.joinTime).toLocaleString(
+      DateTime.TIME_24_WITH_SECONDS
+    )}`,
   },
   {
     field: "late",

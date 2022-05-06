@@ -97,19 +97,19 @@ const Home: NextPage = () => {
         </Typography>
 
         <Typography variant="h6" component="h6" gutterBottom>
-          Start Time: {startTime.toFormat("hh:mm:ss")}
+          Start Time: {startTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
         </Typography>
         <>
           {lateTime !== undefined && (
             <Typography variant="h6" component="h6" gutterBottom>
-              Late Time: {lateTime.toFormat("hh:mm:ss")}
+              Late Time: {lateTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
             </Typography>
           )}
         </>
         <>
           {endTime !== undefined && (
             <Typography variant="h6" component="h6" gutterBottom>
-              End Time: {endTime.toFormat("hh:mm:ss")}
+              End Time: {endTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
             </Typography>
           )}
         </>

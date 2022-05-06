@@ -1,4 +1,3 @@
-
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { socket } from "./socket";
 import { Student } from "@prisma/client";
@@ -6,23 +5,33 @@ import { GridCellParams, GridColDef, MuiEvent } from "@mui/x-data-grid/models";
 import { DataGrid } from "@mui/x-data-grid";
 
 import { useState } from "react";
+import { EditUserName } from "./shared/editUser";
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", type: "number", width: 100 },
+  {
+    field: "id",
+    headerName: "ID",
+    type: "number",
+    width: 100,
+    editable: false,
+  },
   {
     field: "name",
     headerName: "Name",
-    width: 230,
+    width: 250,
+    editable: true,
+  },
+  {
+    field: "delete",
+    headerName: "Delete",
+    width: 80,
+    hideSortIcons: true,
   },
 ];
-
-
-
 
 interface HomeTableProps {
   users: Student[];
 }
-
 
 export default function HomeTable({ users }: HomeTableProps) {
   const [alert, setAlert] = useState(Boolean);
@@ -42,28 +51,29 @@ export default function HomeTable({ users }: HomeTableProps) {
   return (
     <div style={{ height: 400, width: "100%" }}>
       <>
-          {/*Creates pop-up when meeting is deleted to confirm deletion*/}
-          {alert && (
-            <Dialog
-              open={alert}
-              onClose={cancelDelete}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                {"Delete This User?"}
-              </DialogTitle>
-              <DialogActions>
-                {/*Closes pop-up if denied*/}
-                <Button onClick={cancelDelete}>No</Button>
-                {/*Runs delete function if confirmed*/}
-                <Button onClick={deleteUser} autoFocus>
-                  Yes
-                </Button>
-              </DialogActions>
-            </Dialog>
-          )}
-        </>
+        {/*Creates pop-up when meeting is deleted to confirm deletion*/}
+        {alert && (
+          <Dialog
+            open={alert}
+            onClose={cancelDelete}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Delete This User?"}
+            </DialogTitle>
+            <DialogActions>
+              {/*Closes pop-up if denied*/}
+              <Button onClick={cancelDelete}>No</Button>
+              {/*Runs delete function if confirmed*/}
+
+              <Button onClick={deleteUser} autoFocus>
+                Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
+      </>
       <DataGrid
         columns={columns}
         rows={users}
@@ -74,11 +84,23 @@ export default function HomeTable({ users }: HomeTableProps) {
         hideFooter
         hideFooterPagination
         hideFooterSelectedRowCount
-        onCellClick={(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
-          event.defaultMuiPrevented = true;
-          setAlert(true);
-          setDeletingID(params.row.id);
-          
+        onCellClick={(
+          params: GridCellParams,
+          event: MuiEvent<React.MouseEvent>
+        ) => {
+          if (params.colDef.headerName == "Delete") {
+            event.defaultMuiPrevented = true;
+            setAlert(true);
+            setDeletingID(params.row.id);
+          }
+        }}
+        onCellEditCommit={(params) => {
+          console.log({ params });
+
+          const data: EditUserName = {id: params.id + "", name: params.value}
+
+          console.log(`Edit ${data}`);
+          socket.emit("user:edit", data);
         }}
       />
     </div>
