@@ -33,7 +33,14 @@ export class MeetingHandler {
    * @param id meeting id to get
    * @returns meeting
    */
-  async get(id: Meeting["id"]): Promise<MeetingAndParticipants | null> {
+  async get(
+    id: Meeting["id"] | undefined
+  ): Promise<MeetingAndParticipants | null> {
+    if (id === undefined) {
+      console.log("Got meeting id is undefined");
+      return null;
+    }
+
     console.log(`Got the meeting ${id}`);
 
     const result = await prisma.meeting.findUnique({
