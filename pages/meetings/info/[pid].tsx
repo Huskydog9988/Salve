@@ -102,7 +102,8 @@ const Home: NextPage = () => {
         <>
           {lateTime !== undefined && (
             <Typography variant="h6" component="h6" gutterBottom>
-              Late Time: {lateTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
+              Late Time:{" "}
+              {lateTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
             </Typography>
           )}
         </>

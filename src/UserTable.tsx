@@ -97,7 +97,7 @@ export default function HomeTable({ users }: HomeTableProps) {
         onCellEditCommit={(params) => {
           console.log({ params });
 
-          const data: EditUserName = {id: params.id + "", name: params.value}
+          const data: EditUserName = { id: params.id + "", name: params.value };
 
           console.log(`Edit ${data}`);
           socket.emit("user:edit", data);

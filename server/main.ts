@@ -183,7 +183,7 @@ export function socketServer(server: Server) {
     /**
      * Edits a user
      */
-     socket.on("user:edit", async (data: EditUserName) => {
+    socket.on("user:edit", async (data: EditUserName) => {
       await studentHandler.edit(data);
 
       // send event that meeting has been deleted
