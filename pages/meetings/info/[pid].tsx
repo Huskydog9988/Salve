@@ -97,25 +97,25 @@ const Home: NextPage = () => {
         </Typography>
 
         <Typography variant="h6" component="h6" gutterBottom>
-          Start Time: {startTime.toFormat("hh:mm:ss")}
+          Start Time: {startTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
         </Typography>
         <>
           {lateTime !== undefined && (
             <Typography variant="h6" component="h6" gutterBottom>
-              Late Time: {lateTime.toFormat("hh:mm:ss")}
+              Late Time: {lateTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
             </Typography>
           )}
         </>
         <>
           {endTime !== undefined && (
             <Typography variant="h6" component="h6" gutterBottom>
-              End Time: {endTime.toFormat("hh:mm:ss")}
+              End Time: {endTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
             </Typography>
           )}
         </>
         <Grid container>
-          <Grid item xs={3}></Grid>
-          <Grid item xs={6}>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={10}>
             {/*Creates table of users in meeting and times*/}
             <MeetingTable users={users} lateTime={lateTime} />
           </Grid>

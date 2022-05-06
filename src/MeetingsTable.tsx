@@ -1,77 +1,128 @@
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import { DateTime, Duration } from "luxon";
-import React from "react";
-import ButtonLink from "./ButtonLink";
+import * as React from "react";
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  GridValueGetterParams,
+  MuiEvent,
+} from "@mui/x-data-grid";
 import { MeetingAndParticipants } from "./shared/meetingAndParticipants";
+import { DateTime } from "luxon";
 
-interface HomeTableProps {
-  meetings: MeetingAndParticipants[];
+const columns: GridColDef[] = [
+  { field: "id", headerName: "ID", type: "number", width: 100 },
+  {
+    field: "name",
+    headerName: "Name",
+    width: 230,
+  },
+  {
+    field: "date",
+    headerName: "Date",
+    width: 150,
+    valueGetter: (params: GridValueGetterParams) =>
+      `${DateTime.fromISO(params.row.startTime).toLocaleString(
+        DateTime.DATE_MED
+      )}`,
+  },
+  {
+    field: "startTime",
+    headerName: "Start Time",
+    width: 150,
+    valueGetter: (params: GridValueGetterParams) =>
+      `${DateTime.fromISO(params.row.startTime).toLocaleString(
+        DateTime.TIME_24_WITH_SECONDS
+      )}`,
+  },
+
+  {
+    field: "endTime",
+    headerName: "End Time",
+    width: 150,
+    valueGetter: (params: GridValueGetterParams) =>
+      `${DateTime.fromISO(params.row.endTime).toLocaleString(
+        DateTime.TIME_24_WITH_SECONDS
+      )}`,
+  },
+  {
+    field: "participants",
+    headerName: "Participants",
+    width: 160,
+    valueGetter: (params: GridValueGetterParams) =>
+      `${params.row.participants.length}`,
+  },
+  {
+    field: "live",
+    headerName: "Live",
+    width: 160,
+    valueGetter: (params: GridValueGetterParams) => {
+      let link;
+
+      if (params.row.endTime !== null) {
+        return "Info";
+      } else {
+        return "Live";
+      }
+    },
+  },
+];
+
+interface MeetingTableProps {
+  meetingData: MeetingAndParticipants[];
 }
 
-export default function MeetingTable({ meetings }: HomeTableProps) {
-  const [emEndTime, setEMEndTime] = React.useState(new Date().toISOString());
+export default function MeetingsTable({ meetingData }: MeetingTableProps) {
+  // const rows: number | string | null[] = [];
 
-  // const emEndTime = ;
-  // const emEndTimeISO = emEndTime.toISO();
+  // let x: number;
+  // for (x = 0; x > meetingsData.length; x++) {
+  //   console.log(`${meetingsData[x]}::::`);
+  //   rows.push([
+  //     name: meetingsData[x].name,
+  //     startTime: meetingsData[x].startTime,
+  //     endTime: meetingsData[x].endTime,
+  //     amount: meetingsData[x].participants,
+  //     id: meetingsData[x].id,
+  //   ]);
+  // }
+  // console.log(rows + " <==");
+
+  // const test = [
+  //   {
+  //     id: 1,
+  //     name: "Na",
+  //     startTime: new Date().toISOString(),
+  //     endTime: new Date().toISOString(),
+  //     participants: [],
+  //   },
+  // ];
 
   return (
-    <TableContainer style={{ maxHeight: "3", overflow: "auto", height: 360 }}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table" stickyHeader>
-        {/* Head Labels for columns */}
-        <TableHead>
-          <TableRow>
-            <TableCell>Meeting Name</TableCell>
-            <TableCell align="left">Date</TableCell>
-            <TableCell align="left">Meeting Length</TableCell>
-            <TableCell align="left">Amount of People</TableCell>
-            <TableCell align="left"></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {/* loop through rows and make a row from it */}
-          {meetings.map((meeting) => {
-            const end = DateTime.fromISO(meeting.endTime || emEndTime);
-            const start = DateTime.fromISO(meeting.startTime);
-            const diff = end.diff(start);
-
-            // converts different in times between start and end to "hh:mm:ss" format
-            const dur = Duration.fromObject(diff.toObject()).toFormat(
-              "hh:mm:ss"
-            );
-
-            const link = `/meetings/info/${meeting.id}`;
-            //Creats a table of meeting with Name, Time, Length, and Member Amount
-            return (
-              <TableRow
-                key={meeting.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {meeting.name}
-                </TableCell>
-                <TableCell align="left">
-                  {DateTime.fromISO(meeting.startTime).toLocaleString(
-                    DateTime.DATETIME_SHORT
-                  )}
-                </TableCell>
-                <TableCell align="left">{dur}</TableCell>
-                <TableCell align="left">
-                  {meeting.participants.length}
-                </TableCell>
-                <TableCell align="left">
-                  {/* Button that links to info page for the meeting */}
-                  <ButtonLink link={link}>More Info</ButtonLink>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div style={{ height: 400, width: "100%" }}>
+      <DataGrid
+        columns={columns}
+        rows={meetingData}
+        disableColumnMenu
+        columnBuffer={2}
+        columnThreshold={2}
+        disableColumnSelector
+        hideFooter
+        hideFooterPagination
+        hideFooterSelectedRowCount
+        onCellClick={(
+          params: GridCellParams,
+          event: MuiEvent<React.MouseEvent>
+        ) => {
+          event.defaultMuiPrevented = true;
+          let link;
+          if (params.row.endTime !== null) {
+            link = `info/${params.row.id}`;
+          } else {
+            link = `join/${params.row.id}`;
+          }
+          window.location.href = link;
+        }}
+      />
+    </div>
   );
 }
