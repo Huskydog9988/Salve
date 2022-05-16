@@ -33,7 +33,7 @@ function getMedianOfCodeErrors(
 
 const defaultConstraints: DefaultConstraints = {
   width: 640,
-  height: 480,
+  height: 445,
 };
 
 const defaultLocatorSettings: DefaultLocatorSettings = {

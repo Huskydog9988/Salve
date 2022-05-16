@@ -55,7 +55,7 @@ interface MeetingTableProps {
 export default function MeetingsTable({ users, lateTime }: MeetingTableProps) {
   console.log(users);
   return (
-    <div style={{ height: 300, width: "100%" }}>
+    <div style={{ height: 350, width: "100%" }}>
       <DataGrid
         columns={columns}
         rows={users}

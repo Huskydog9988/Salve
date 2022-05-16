@@ -24,13 +24,13 @@ export default function VirtualizedList({ users }: ResultsProps) {
     <Box
       sx={{
         width: "100%",
-        height: 400,
+        height: 380,
         maxWidth: 360,
         bgcolor: "background.paper",
       }}
     >
       <FixedSizeList
-        height={400}
+        height={380}
         width={360}
         itemSize={46}
         itemCount={users.size}

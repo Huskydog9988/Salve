@@ -90,67 +90,93 @@ const Home: NextPage = () => {
           alignItems: "center",
         }}
       >
-        {/*Displays information about the meeting*/}
-
         <Typography variant="h1" component="h1" gutterBottom>
           {name}
         </Typography>
-
-        <Typography variant="h6" component="h6" gutterBottom>
-          Start Time: {startTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
-        </Typography>
-        <>
-          {lateTime !== undefined && (
-            <Typography variant="h6" component="h6" gutterBottom>
-              Late Time:{" "}
-              {lateTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
-            </Typography>
-          )}
-        </>
-        <>
-          {endTime !== undefined && (
-            <Typography variant="h6" component="h6" gutterBottom>
-              End Time: {endTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
-            </Typography>
-          )}
-        </>
+        {/*Displays information about the meeting*/}
         <Grid container>
+          <Grid item xs={2}></Grid>
+
+          <Grid item xs={2}>
+            <Typography variant="h6" component="h6" gutterBottom>
+              Start Time:{" "}
+              {startTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
+            </Typography>
+          </Grid>
           <Grid item xs={1}></Grid>
-          <Grid item xs={10}>
+          <Grid item xs={2}>
+            <>
+              {lateTime !== undefined && (
+                <Typography variant="h6" component="h6" gutterBottom>
+                  Late Time:{" "}
+                  {lateTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
+                </Typography>
+              )}
+            </>
+          </Grid>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={2}>
+            <>
+              {endTime !== undefined && (
+                <Typography variant="h6" component="h6" gutterBottom>
+                  End Time:{" "}
+                  {endTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
+                </Typography>
+              )}
+            </>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
             {/*Creates table of users in meeting and times*/}
             <MeetingTable users={users} lateTime={lateTime} />
           </Grid>
         </Grid>
         {/*Creates button to delete meeting*/}
-        <Button variant="contained" onClick={sendAlert}>
-          Delete Meeting
-        </Button>
 
-        <>
-          {/*Creates pop-up when meeting is deleted to confirm deletion*/}
-          {alert && (
-            <Dialog
-              open={alert}
-              onClose={cancelDelete}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                {"Delete This Meeting?"}
-              </DialogTitle>
-              <DialogActions>
-                {/*Closes pop-up if denied*/}
-                <Button onClick={cancelDelete}>No</Button>
-                {/*Runs delete function if confirmed*/}
-                <Button onClick={deleteMeeting} autoFocus>
-                  Yes
-                </Button>
-              </DialogActions>
-            </Dialog>
-          )}
-        </>
-        <ButtonLink link="/meetings/list">View all Meetings</ButtonLink>
-        <ButtonLink link="/">Go to the home page</ButtonLink>
+        <Grid container>
+          <Grid item xs={0}>
+            <>
+              {/*Creates pop-up when meeting is deleted to confirm deletion*/}
+              {alert && (
+                <Dialog
+                  open={alert}
+                  onClose={cancelDelete}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Delete This Meeting?"}
+                  </DialogTitle>
+                  <DialogActions>
+                    {/*Closes pop-up if denied*/}
+                    <Button onClick={cancelDelete}>No</Button>
+                    {/*Runs delete function if confirmed*/}
+                    <Button onClick={deleteMeeting} autoFocus>
+                      Yes
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              )}
+            </>
+          </Grid>
+
+          <Grid item xs={3}></Grid>
+
+          <Grid item xs={2}>
+            {" "}
+            <ButtonLink link="/meetings/list">View all Meetings</ButtonLink>
+          </Grid>
+          <Grid item xs={2}>
+            <ButtonLink link="/">Go to the home page</ButtonLink>
+          </Grid>
+          <Grid item xs={2}>
+            <Button variant="contained" onClick={sendAlert}>
+              Delete Meeting
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
     </Container>
   );

@@ -95,7 +95,7 @@ export default function Scan() {
     //Prevents page from reloading
     event.preventDefault();
     //Disables scanner after meeting is ended
-    setScanning(false);
+    setScanning(true);
     //Emit to server to end and log meeting
     socket.emit("meeting:end", pid);
   }
@@ -114,29 +114,44 @@ export default function Scan() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={5}>
+        
+      <Grid item xs={1}></Grid>
         <Grid item xs={3} md={6}>
-          {/* Allows user to enable/disable camera for privacy reasons */}
-          <Button variant="contained" onClick={() => setScanning(!scanning)}>
-            {scanning ? "Stop" : "Start"}
-          </Button>
+          <Box
+        component="form"
+        sx={{
+          "& > :not(style)": { m: 1, width: "25ch" },
+
+          my: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        {" "}
+          </Box>
           {/* Displays the scanner 
           
               May not function on some computers/browsers
           */}
           {/* @ts-ignore */}
+
           <div ref={scannerRef}>
             <canvas
               className="drawingBuffer"
               style={{
                 position: "absolute",
-                top: "35px",
-                left: "-5px",
+                top: "14px",
+                left: "108px",
                 // height: '100%',
                 // width: '100%',
                 border: "3px solid #0059B2",
               }}
               width="640"
-              height="480"
+              height="445"
             />
             {scanning ? (
               <Scanner
@@ -160,7 +175,7 @@ export default function Scan() {
         sx={{
           "& > :not(style)": { m: 1, width: "25ch" },
 
-          my: 4,
+          my: 1,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -168,10 +183,19 @@ export default function Scan() {
         }}
         noValidate
         autoComplete="off"
-      ></Box>
+      >
+        {" "}
+      </Box>
       <Grid container spacing={1} direction="row">
-        <Grid item xs={3}></Grid>
-        <Grid item xs={3}>
+      <Grid item xs={1}></Grid>
+        <Grid item xs={1}>
+        {/* Allows user to enable/disable camera for privacy reasons */}
+          <Button variant="contained" onClick={() => setScanning(!scanning)}>
+              {scanning ? "Stop" : "Start"}
+          </Button>
+        </Grid>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={2}>
           <Box component="form" noValidate autoComplete="off">
             {/* Manually adds user IDs if camera not functioning */}
             <TextField
@@ -194,7 +218,7 @@ export default function Scan() {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={1}></Grid>
+        <Grid item xs={3}></Grid>
         {/* Button to end meeting */}
         <Grid item xs={3}>
           <Button variant="contained" onClick={endMeeting}>

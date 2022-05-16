@@ -98,7 +98,7 @@ export default function MeetingsTable({ meetingData }: MeetingTableProps) {
   // ];
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ height: 350, width: "100%" }}>
       <DataGrid
         columns={columns}
         rows={meetingData}
