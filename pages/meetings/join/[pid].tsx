@@ -114,24 +114,23 @@ export default function Scan() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={5}>
-        
-      <Grid item xs={1}></Grid>
+        <Grid item xs={1}></Grid>
         <Grid item xs={3} md={6}>
           <Box
-        component="form"
-        sx={{
-          "& > :not(style)": { m: 1, width: "25ch" },
+            component="form"
+            sx={{
+              "& > :not(style)": { m: 1, width: "25ch" },
 
-          my: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        {" "}
+              my: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            {" "}
           </Box>
           {/* Displays the scanner 
           
@@ -187,11 +186,11 @@ export default function Scan() {
         {" "}
       </Box>
       <Grid container spacing={1} direction="row">
-      <Grid item xs={1}></Grid>
+        <Grid item xs={1}></Grid>
         <Grid item xs={1}>
-        {/* Allows user to enable/disable camera for privacy reasons */}
+          {/* Allows user to enable/disable camera for privacy reasons */}
           <Button variant="contained" onClick={() => setScanning(!scanning)}>
-              {scanning ? "Stop" : "Start"}
+            {scanning ? "Stop" : "Start"}
           </Button>
         </Grid>
         <Grid item xs={1}></Grid>
