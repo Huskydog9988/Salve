@@ -1,6 +1,11 @@
 import { DateTime } from "luxon";
 import { ParticipantAndStudent } from "./shared/meetingAndParticipants";
-import { DataGrid, GridToolbar, GridCsvExportOptions } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridToolbar,
+  GridCsvExportOptions,
+  GridPrintExportOptions,
+} from "@mui/x-data-grid";
 import { GridValueGetterParams } from "@mui/x-data-grid/models/params";
 import { GridColDef } from "@mui/x-data-grid/models";
 
@@ -58,13 +63,26 @@ export default function MeetingsTable({
   lateTime,
   meetingName,
 }: MeetingTableProps) {
+  const fileName = `${meetingName} - Salve`;
+
   const csvOptions: GridCsvExportOptions = {
-    fileName: `${meetingName} - Salve`,
+    fileName,
     utf8WithBom: true,
   };
+
+  const printOptions: GridPrintExportOptions = {
+    hideToolbar: true,
+    fileName,
+  };
+
   return (
     <div style={{ height: 350, width: "100%" }}>
       <DataGrid
+        sx={{
+          "@media print": {
+            ".MuiDataGrid-main": { color: "rgba(0, 0, 0, 0.87)" },
+          },
+        }}
         columns={columns}
         rows={users}
         disableColumnMenu
@@ -77,7 +95,7 @@ export default function MeetingsTable({
         components={{
           Toolbar: GridToolbar,
         }}
-        componentsProps={{ toolbar: { csvOptions } }}
+        componentsProps={{ toolbar: { csvOptions, printOptions } }}
       />
     </div>
   );
