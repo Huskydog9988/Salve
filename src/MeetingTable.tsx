@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { ParticipantAndStudent } from "./shared/meetingAndParticipants";
-import { DataGrid } from "@mui/x-data-grid/DataGrid";
+import { DataGrid, GridToolbar, GridCsvExportOptions } from "@mui/x-data-grid";
 import { GridValueGetterParams } from "@mui/x-data-grid/models/params";
 import { GridColDef } from "@mui/x-data-grid/models";
 
@@ -48,12 +48,20 @@ const columns: GridColDef[] = [
 interface MeetingTableProps {
   users: ParticipantAndStudent[];
   lateTime: DateTime | undefined;
+  meetingName: string;
 }
 /**
  * Sorting algorithm for users
  */
-export default function MeetingsTable({ users, lateTime }: MeetingTableProps) {
-  console.log(users);
+export default function MeetingsTable({
+  users,
+  lateTime,
+  meetingName,
+}: MeetingTableProps) {
+  const csvOptions: GridCsvExportOptions = {
+    fileName: `${meetingName} - Salve`,
+    utf8WithBom: true,
+  };
   return (
     <div style={{ height: 350, width: "100%" }}>
       <DataGrid
@@ -66,6 +74,10 @@ export default function MeetingsTable({ users, lateTime }: MeetingTableProps) {
         hideFooter
         hideFooterPagination
         hideFooterSelectedRowCount
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{ toolbar: { csvOptions } }}
       />
     </div>
   );
