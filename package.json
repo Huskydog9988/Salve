@@ -22,7 +22,7 @@
     "@mui/icons-material": "^5.6.2",
     "@mui/lab": "^5.0.0-alpha.81",
     "@mui/material": "^5.4.1",
-    "@mui/x-data-grid": "^5.10.0",
+    "@mui/x-data-grid": "^5.11.0",
     "@prisma/client": "^3.14.0",
     "@socket.io/admin-ui": "^0.2.0",
     "clsx": "^1.1.1",
@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/lokijs": "^1.5.7",
     "@types/luxon": "^2.0.9",
-    "@types/node": "^17.0.21",
+    "@types/node": "^17.0.34",
     "@types/react": "17.0.39",
     "@types/react-dom": "^17.0.11",
     "@types/react-window": "^1.8.5",
@@ -56,7 +56,7 @@
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.6",
-    "sharp": "^0.30.2",
+    "sharp": "^0.30.4",
     "utf-8-validate": "^5.0.9"
   }
 }
