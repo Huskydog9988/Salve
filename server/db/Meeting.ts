@@ -34,9 +34,9 @@ export class MeetingHandler {
    * @returns meeting
    */
   async get(
-    id: Meeting["id"] | undefined
+    id: Meeting["id"] | undefined | null
   ): Promise<MeetingAndParticipants | null> {
-    if (id === undefined) {
+    if (id === undefined || id === null) {
       console.log("Got meeting id is undefined");
       return null;
     }
