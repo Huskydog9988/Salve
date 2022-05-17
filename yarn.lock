@@ -560,10 +560,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
-"@socket.io/admin-ui@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@socket.io/admin-ui/-/admin-ui-0.2.0.tgz#8376db1b739543f3f896ecee6d4f5051ab026209"
-  integrity sha512-dAjJRIDoKZAuuwUYeQ0qgpJj0hoK170AKYoOCSbN6RK2Kf39LZc+O66ZnYgEUFFFqgOxh2MakTXEezarXSXTNQ==
+"@socket.io/admin-ui@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@socket.io/admin-ui/-/admin-ui-0.3.0.tgz#2cdbdc295bd64024dfdc940304aba185005a7465"
+  integrity sha512-1FxkMC87c97+3i4sJvOXcWhTIfA63tP9OnDvlQp0PBtJtiMCSRzL4BQxEiHR54SHvd17a7TGpUImRuc8sJV+Tg==
   dependencies:
     "@types/bcrypt" "~3.0.0"
     bcrypt "~5.0.1"
