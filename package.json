@@ -20,7 +20,7 @@
     "@emotion/styled": "^11.6.0",
     "@ericblade/quagga2": "^1.4.2",
     "@mui/icons-material": "^5.6.2",
-    "@mui/lab": "^5.0.0-alpha.69",
+    "@mui/lab": "^5.0.0-alpha.81",
     "@mui/material": "^5.4.1",
     "@mui/x-data-grid": "^5.10.0",
     "@prisma/client": "^3.14.0",
