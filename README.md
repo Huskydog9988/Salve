@@ -26,6 +26,12 @@ Salve is a website that allows teachers and students to start classes more easil
 
 We want to cut the time it takes for classes to get started by removing the delays of attendance. By saving two minutes of class each day, we can save eight classes' worth of learning each school year, essential time. When we brainstormed Salve, we wanted to limit human interaction while maintaining efficiency. We decided that scanning a code is far more efficient than entering data, and wanted to implement a system that stores IDs and students' names making it easier for the teachers to determine who was present.
 
+## 🏗️ Contributing
+
+If you have found any issues within Salve or have any ideas of how to improve it, please [open up a new issue](https://github.com/Huskydog9988/Salve/issues/new).
+
+If you would like to contribute code to Salve, please see our [contributing guide](./docs/CONTRIBUTING.md).
+
 ## ⚠️ Licenses
 
 Copyright (c) 2022-present [Huskydog9988](https://github.com/Huskydog9988) and [Lucas Sadoulet](https://github.com/SilentS100). `Salve` is free and opensource software licensed under the [Apache License 2.0](./LICENSE).
