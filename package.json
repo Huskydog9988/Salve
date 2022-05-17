@@ -11,7 +11,7 @@
     "start": "NODE_ENV=production node dist/index.js",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "setup": "prisma db push"
+    "setup": "prisma generate && prisma db push"
   },
   "dependencies": {
     "@emotion/cache": "^11.7.1",
