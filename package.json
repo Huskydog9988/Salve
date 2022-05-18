@@ -34,7 +34,7 @@
     "react-dom": "17.0.2",
     "react-virtualized": "^9.22.3",
     "react-window": "^1.8.6",
-    "socket.io": "^4.5.0",
+    "socket.io": "^4.5.1",
     "socket.io-client": "^4.4.1",
     "uuid": "^8.3.2",
     "webrtc-adapter": "^8.1.1"
