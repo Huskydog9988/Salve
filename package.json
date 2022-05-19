@@ -36,6 +36,7 @@
     "react-window": "^1.8.6",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
+    "typeface-alata": "^1.1.13",
     "uuid": "^8.3.2",
     "webrtc-adapter": "^8.1.1"
   },
