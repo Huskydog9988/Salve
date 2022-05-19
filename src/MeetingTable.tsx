@@ -9,47 +9,6 @@ import {
 import { GridValueGetterParams } from "@mui/x-data-grid/models/params";
 import { GridColDef } from "@mui/x-data-grid/models";
 
-const columns: GridColDef[] = [
-  {
-    field: "id",
-    headerName: "ID",
-    type: "number",
-    width: 100,
-    valueGetter: (params: GridValueGetterParams) => {
-      return params.row.student.id;
-    },
-  },
-  {
-    field: "name",
-    headerName: "Name",
-    width: 230,
-    valueGetter: (params: GridValueGetterParams) => {
-      return params.row.student.name;
-    },
-  },
-  {
-    field: "joinTime",
-    headerName: "Join Time",
-    width: 230,
-    valueGetter: (params: GridValueGetterParams) =>
-      `${DateTime.fromISO(params.row.joinTime).toLocaleString(
-        DateTime.TIME_24_WITH_SECONDS
-      )}`,
-  },
-  {
-    field: "late",
-    headerName: "Late",
-    width: 160,
-    valueGetter: (params: GridValueGetterParams) => {
-      if (params.row.late) {
-        return "Late";
-      } else {
-        return "";
-      }
-    },
-  },
-];
-
 interface MeetingTableProps {
   users: ParticipantAndStudent[];
   lateTime: DateTime | undefined;
@@ -74,6 +33,49 @@ export default function MeetingsTable({
     hideToolbar: true,
     fileName,
   };
+
+  const columns: GridColDef[] = [
+    {
+      field: "id",
+      headerName: "ID",
+      type: "number",
+      width: 100,
+      valueGetter: (params: GridValueGetterParams) => {
+        return params.row.student.id;
+      },
+    },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 230,
+      valueGetter: (params: GridValueGetterParams) => {
+        return params.row.student.name;
+      },
+    },
+    {
+      field: "joinTime",
+      headerName: "Join Time",
+      width: 230,
+      valueGetter: (params: GridValueGetterParams) =>
+        `${DateTime.fromISO(params.row.joinTime).toLocaleString(
+          DateTime.TIME_24_WITH_SECONDS
+        )}`,
+    },
+    {
+      field: "late",
+      headerName: "Late",
+      width: 160,
+      valueGetter: (params: GridValueGetterParams) => {
+
+        // joinTime is a string, it must be converted to a DateTime
+        if (lateTime && DateTime.fromISO(params.row.joinTime).toMillis() > lateTime.toMillis()) {
+          return "Late";
+        } else {
+          return "";
+        }
+      },
+    },
+  ];
 
   return (
     <div style={{ height: 350, width: "100%" }}>
