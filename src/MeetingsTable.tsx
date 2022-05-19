@@ -6,11 +6,10 @@ import {
   GridValueGetterParams,
   MuiEvent,
   GridToolbar,
-  GridCsvExportOptions,
-  GridPrintExportOptions,
 } from "@mui/x-data-grid";
 import { MeetingAndParticipants } from "./shared/meetingAndParticipants";
 import { DateTime } from "luxon";
+import { exportOptions } from "./shared/exportOptions";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", type: "number", width: 100 },
@@ -69,17 +68,8 @@ const columns: GridColDef[] = [
   },
 ];
 
-const fileName = `Meeting List - Salve`;
+const { csvOptions, printOptions } = exportOptions("Meeting List");
 
-const csvOptions: GridCsvExportOptions = {
-  fileName,
-  utf8WithBom: true,
-};
-
-const printOptions: GridPrintExportOptions = {
-  hideToolbar: true,
-  fileName,
-};
 interface MeetingTableProps {
   meetingData: MeetingAndParticipants[];
 }
