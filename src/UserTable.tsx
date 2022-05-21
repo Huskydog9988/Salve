@@ -49,7 +49,7 @@ export default function HomeTable({ users }: HomeTableProps) {
     setAlert(false);
   }
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ height: 350, width: "100%" }}>
       <>
         {/*Creates pop-up when meeting is deleted to confirm deletion*/}
         {alert && (

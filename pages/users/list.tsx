@@ -161,11 +161,12 @@ const Home: NextPage = () => {
                 >
                   Create User
                 </LoadingButton>
+
+                <ButtonLink link="/">Go to the home page</ButtonLink>
               </Box>
             </Box>
           </Grid>
         </Grid>
-        <ButtonLink link="/">Go to the home page</ButtonLink>
       </Box>
     </Container>
   );
