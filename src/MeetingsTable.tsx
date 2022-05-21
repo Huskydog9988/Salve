@@ -1,13 +1,16 @@
 import * as React from "react";
 import {
   DataGrid,
+  GridApi,
   GridCellParams,
+  GridCellValue,
   GridColDef,
   GridValueGetterParams,
   MuiEvent,
 } from "@mui/x-data-grid";
 import { MeetingAndParticipants } from "./shared/meetingAndParticipants";
 import { DateTime } from "luxon";
+import ButtonLink from "../src/ButtonLink";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", type: "number", width: 100 },
@@ -20,10 +23,15 @@ const columns: GridColDef[] = [
     field: "date",
     headerName: "Date",
     width: 150,
-    valueGetter: (params: GridValueGetterParams) =>
-      `${DateTime.fromISO(params.row.startTime).toLocaleString(
+
+    valueGetter: (params: GridValueGetterParams) => {
+      return params.row.startTime;
+    },
+    renderCell: (params: GridValueGetterParams) => {
+      return DateTime.fromISO(params.row.startTime).toLocaleString(
         DateTime.DATE_MED
-      )}`,
+      );
+    },
   },
   {
     field: "startTime",
@@ -39,10 +47,16 @@ const columns: GridColDef[] = [
     field: "endTime",
     headerName: "End Time",
     width: 150,
-    valueGetter: (params: GridValueGetterParams) =>
-      `${DateTime.fromISO(params.row.endTime).toLocaleString(
-        DateTime.TIME_24_WITH_SECONDS
-      )}`,
+
+    valueGetter: (params: GridValueGetterParams) => {
+      if (params.row.endTime !== null) {
+        return `${DateTime.fromISO(params.row.endTime).toLocaleString(
+          DateTime.TIME_24_WITH_SECONDS
+        )}`;
+      } else {
+        return "";
+      }
+    },
   },
   {
     field: "participants",
@@ -51,19 +65,27 @@ const columns: GridColDef[] = [
     valueGetter: (params: GridValueGetterParams) =>
       `${params.row.participants.length}`,
   },
+  // {
+  //   field: "live",
+  //   headerName: "Live",
+  //   width: 160,
+  //   valueGetter: (params: GridValueGetterParams) => {
+  //     let link;
+
+  //
+  //   },
+  // },
   {
     field: "live",
-    headerName: "Live",
-    width: 160,
-    valueGetter: (params: GridValueGetterParams) => {
-      let link;
-
+    headerName: "",
+    renderCell: (params) => {
       if (params.row.endTime !== null) {
-        return "Info";
+        return <ButtonLink link="info/${params.row.id}">Info</ButtonLink>;
       } else {
-        return "Live";
+        return <ButtonLink link="live/${params.row.id}">Live</ButtonLink>;
       }
     },
+    valueGetter: (params: GridValueGetterParams) => `${params.row.endTime}`,
   },
 ];
 
@@ -109,19 +131,6 @@ export default function MeetingsTable({ meetingData }: MeetingTableProps) {
         hideFooter
         hideFooterPagination
         hideFooterSelectedRowCount
-        onCellClick={(
-          params: GridCellParams,
-          event: MuiEvent<React.MouseEvent>
-        ) => {
-          event.defaultMuiPrevented = true;
-          let link;
-          if (params.row.endTime !== null) {
-            link = `info/${params.row.id}`;
-          } else {
-            link = `join/${params.row.id}`;
-          }
-          window.location.href = link;
-        }}
       />
     </div>
   );

@@ -7,28 +7,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
 import { EditUserName } from "./shared/editUser";
 
-const columns: GridColDef[] = [
-  {
-    field: "id",
-    headerName: "ID",
-    type: "number",
-    width: 100,
-    editable: false,
-  },
-  {
-    field: "name",
-    headerName: "Name",
-    width: 250,
-    editable: true,
-  },
-  {
-    field: "delete",
-    headerName: "Delete",
-    width: 80,
-    hideSortIcons: true,
-  },
-];
-
 interface HomeTableProps {
   users: Student[];
 }
@@ -36,6 +14,39 @@ interface HomeTableProps {
 export default function HomeTable({ users }: HomeTableProps) {
   const [alert, setAlert] = useState(Boolean);
   const [deletingID, setDeletingID] = useState();
+  const columns: GridColDef[] = [
+    {
+      field: "id",
+      headerName: "ID",
+      type: "number",
+      width: 120,
+      editable: false,
+    },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 270,
+      editable: true,
+    },
+    {
+      field: "delete",
+      headerName: "",
+      width: 80,
+      hideSortIcons: true,
+      renderCell: (params) => {
+        return (
+          <Button
+            onClick={() => {
+              setAlert(true);
+              setDeletingID(params.row.id);
+            }}
+          >
+            Delete
+          </Button>
+        );
+      },
+    },
+  ];
 
   function deleteUser(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
@@ -49,7 +60,7 @@ export default function HomeTable({ users }: HomeTableProps) {
     setAlert(false);
   }
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ height: 340, width: "110%" }}>
       <>
         {/*Creates pop-up when meeting is deleted to confirm deletion*/}
         {alert && (
@@ -84,16 +95,6 @@ export default function HomeTable({ users }: HomeTableProps) {
         hideFooter
         hideFooterPagination
         hideFooterSelectedRowCount
-        onCellClick={(
-          params: GridCellParams,
-          event: MuiEvent<React.MouseEvent>
-        ) => {
-          if (params.colDef.headerName == "Delete") {
-            event.defaultMuiPrevented = true;
-            setAlert(true);
-            setDeletingID(params.row.id);
-          }
-        }}
         onCellEditCommit={(params) => {
           console.log({ params });
 
