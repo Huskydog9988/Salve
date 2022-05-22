@@ -29,7 +29,6 @@
     "lokijs": "^1.5.12",
     "luxon": "^2.4.0",
     "next": "12.1.0",
-    "quagga": "^0.12.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-virtualized": "^9.22.3",
