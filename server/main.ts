@@ -49,30 +49,14 @@ export function socketServer(server: Server) {
    * An optional item which denotes the result of a performed operation
    */
 
-  // when user connects via socket
-  io.on("connection", (socket) => {
-    console.log("a user connected");
+  const meetingNsp = io.of("/meeting");
+  const studentNsp = io.of("/student");
 
-    /**
-     * Allows client to specify which room to join
-     */
-    socket.on("join", (id: Meeting["id"]) => {
-      // meetingHandler.join(id);
-
-      socket.join(`${id}`);
-    });
-
-    /**
-     * Allows client to specify which room to leave
-     */
-    socket.on("leave", (id: Meeting["id"]) => {
-      socket.leave(`${id}`);
-    });
-
+  meetingNsp.on("connection", (socket) => {
     /**
      * creates a meetings
      */
-    socket.on("meeting:create", async (meetingData: MeetingCreateClient) => {
+    socket.on("create", async (meetingData: MeetingCreateClient) => {
       const time = new Date().toISOString();
 
       // create the meeting
@@ -82,60 +66,60 @@ export function socketServer(server: Server) {
       });
 
       // send event that meeting has been created
-      socket.emit("meeting:create:result", result.id);
+      socket.emit("create:result", result.id);
       // send same event to all in meetings room
-      socket.in("meetings").emit("meeting:create:result", result.id);
+      socket.in("meetings").emit("create:result", result.id);
     });
 
     /**
      * Gets a specific meeting
      */
-    socket.on("meeting:get", async (id: Meeting["id"]) => {
+    socket.on("get", async (id: Meeting["id"]) => {
       const meeting = await meetingHandler.get(id);
 
       // send result back
-      socket.emit("meeting:get:result", meeting);
+      socket.emit("get:result", meeting);
     });
 
     /**
      * Gets all meetings
      */
-    socket.on("meeting:list", async () => {
+    socket.on("list", async () => {
       const meetings = await meetingHandler.list();
 
       // send result back
-      socket.emit("meeting:list:result", meetings);
+      socket.emit("list:result", meetings);
     });
 
     /**
      * End a meeting
      */
-    socket.on("meeting:end", async (id: Meeting["id"]) => {
+    socket.on("end", async (id: Meeting["id"]) => {
       await meetingHandler.end(id);
 
       // notify the client that the meeting has been ended
-      socket.emit("meeting:end:result", id);
+      socket.emit("end:result", id);
       // tell all in the meeting it has ended
-      socket.broadcast.emit("meeting:end:result", id);
+      socket.broadcast.emit("end:result", id);
     });
 
     /**
      * Delete a meeting
      */
-    socket.on("meeting:delete", async (id: Meeting["id"]) => {
+    socket.on("delete", async (id: Meeting["id"]) => {
       // console.log(`Requested a delete (server) of ${id}`);
       await meetingHandler.delete(id);
 
       // send event that meeting has been deleted
-      socket.emit("meeting:delete:result", id);
+      socket.emit("delete:result", id);
       // send same event to all
-      socket.in("meetings").emit("meeting:delete:result", id);
+      socket.in("meetings").emit("delete:result", id);
     });
 
     /**
      * Has a user join a meeting
      */
-    socket.on("meeting:user:join", async (data: StudentJoin) => {
+    socket.on("join", async (data: StudentJoin) => {
       //Prevent duplicate users from being logged to meeting
       const meeting = await meetingHandler.get(data.meeting);
 
@@ -155,29 +139,31 @@ export function socketServer(server: Server) {
       // if user has a name
       if (name !== null && name !== undefined) {
         // tell all
-        socket.broadcast.emit("meeting:user:join:result", name);
+        socket.broadcast.emit("join:result", name);
         // send back to client
-        socket.emit("meeting:user:join:result", name);
+        socket.emit("join:result", name);
       } else {
         // if no name
 
         // tell all
-        socket.broadcast.emit("meeting:user:join:result", userId);
+        socket.broadcast.emit("join:result", userId);
         // send back to client
-        socket.emit("meeting:user:join:result", userId);
+        socket.emit("join:result", userId);
       }
     });
+  });
 
+  studentNsp.on("connection", (socket) => {
     /**
      * Deletes a user
      */
-    socket.on("user:delete", async (id: Student["id"]) => {
+    socket.on("delete", async (id: Student["id"]) => {
       await studentHandler.delete(id);
 
       // send event that meeting has been deleted
-      socket.emit("user:delete:result", id);
+      socket.emit("delete:result", id);
       // tell all in users too
-      socket.in("users").emit("user:delete:result", id);
+      socket.in("users").emit("delete:result", id);
     });
 
     /**
@@ -195,38 +181,59 @@ export function socketServer(server: Server) {
     /**
      * Creates a user
      */
-    socket.on("user:create", async (user: StudentCreate) => {
+    socket.on("create", async (user: StudentCreate) => {
       await studentHandler.create(user);
 
       // tell client user has been creates
-      socket.emit("user:create:result", user.id);
+      socket.emit("create:result", user.id);
       // tell all in users too
-      socket.in("users").emit("user:create:result", user.id);
+      socket.in("users").emit("create:result", user.id);
     });
 
     /**
      * Gets all users
      */
-    socket.on("user:list", async () => {
+    socket.on("list", async () => {
       const users = await studentHandler.list();
 
       // send result to client
-      socket.emit("user:list:result", users);
+      socket.emit("list:result", users);
     });
 
     /**
      * Gets a specific user
      */
-    socket.on("user:get", async (id: Student["id"]) => {
+    socket.on("get", async (id: Student["id"]) => {
       const user = await studentHandler.get(id);
 
       // send result to client
-      socket.emit("user:get:result", user);
+      socket.emit("get:result", user);
+    });
+  });
+
+  // when user connects via socket
+  io.on("connection", (socket) => {
+    // console.log("a user connected");
+
+    /**
+     * Allows client to specify which room to join
+     */
+    socket.on("join", (id: Meeting["id"]) => {
+      // meetingHandler.join(id);
+
+      socket.join(`${id}`);
+    });
+
+    /**
+     * Allows client to specify which room to leave
+     */
+    socket.on("leave", (id: Meeting["id"]) => {
+      socket.leave(`${id}`);
     });
 
     // client disconnected
     socket.on("disconnect", () => {
-      console.log("user disconnected");
+      // console.log("user disconnected");
     });
   });
 
