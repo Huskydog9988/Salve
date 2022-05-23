@@ -133,5 +133,5 @@ dist
 /**/.pnp.*
 
 # db files
-data/
-*.db
+prisma/data/
+database.db

@@ -2,10 +2,35 @@ import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { socket } from "./socket";
 import { Student } from "@prisma/client";
 import { GridCellParams, GridColDef, MuiEvent } from "@mui/x-data-grid/models";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { exportOptions } from "./shared/exportOptions";
 
 import { useState } from "react";
 import { EditUserName } from "./shared/editUser";
+
+const columns: GridColDef[] = [
+  {
+    field: "id",
+    headerName: "ID",
+    type: "number",
+    width: 100,
+    editable: false,
+  },
+  {
+    field: "name",
+    headerName: "Name",
+    width: 250,
+    editable: true,
+  },
+  {
+    field: "delete",
+    headerName: "Delete",
+    width: 80,
+    hideSortIcons: true,
+  },
+];
+
+const { csvOptions, printOptions } = exportOptions("User List");
 
 interface HomeTableProps {
   users: Student[];
@@ -103,6 +128,10 @@ export default function HomeTable({ users }: HomeTableProps) {
           console.log(`Edit ${data}`);
           socket.emit("user:edit", data);
         }}
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{ toolbar: { csvOptions, printOptions } }}
       />
     </div>
   );

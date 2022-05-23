@@ -7,10 +7,12 @@ import {
   GridColDef,
   GridValueGetterParams,
   MuiEvent,
+  GridToolbar,
 } from "@mui/x-data-grid";
 import { MeetingAndParticipants } from "./shared/meetingAndParticipants";
 import { DateTime } from "luxon";
 import ButtonLink from "../src/ButtonLink";
+import { exportOptions } from "./shared/exportOptions";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", type: "number", width: 100 },
@@ -42,7 +44,6 @@ const columns: GridColDef[] = [
         DateTime.TIME_24_WITH_SECONDS
       )}`,
   },
-
   {
     field: "endTime",
     headerName: "End Time",
@@ -89,6 +90,8 @@ const columns: GridColDef[] = [
   },
 ];
 
+const { csvOptions, printOptions } = exportOptions("Meeting List");
+
 interface MeetingTableProps {
   meetingData: MeetingAndParticipants[];
 }
@@ -122,6 +125,11 @@ export default function MeetingsTable({ meetingData }: MeetingTableProps) {
   return (
     <div style={{ height: 350, width: "100%" }}>
       <DataGrid
+        sx={{
+          "@media print": {
+            ".MuiDataGrid-main": { color: "rgba(0, 0, 0, 0.87)" },
+          },
+        }}
         columns={columns}
         rows={meetingData}
         disableColumnMenu
@@ -131,6 +139,23 @@ export default function MeetingsTable({ meetingData }: MeetingTableProps) {
         hideFooter
         hideFooterPagination
         hideFooterSelectedRowCount
+        onCellClick={(
+          params: GridCellParams,
+          event: MuiEvent<React.MouseEvent>
+        ) => {
+          event.defaultMuiPrevented = true;
+          let link;
+          if (params.row.endTime !== null) {
+            link = `info/${params.row.id}`;
+          } else {
+            link = `join/${params.row.id}`;
+          }
+          window.location.href = link;
+        }}
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{ toolbar: { csvOptions, printOptions } }}
       />
     </div>
   );

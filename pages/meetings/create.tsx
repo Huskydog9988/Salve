@@ -8,7 +8,6 @@ import TimePicker from "@mui/lab/TimePicker";
 // import LoadingButton from "@mui/lab/LoadingButton";
 import ButtonLink from "../../src/ButtonLink";
 import { socket } from "../../src/socket";
-// import { v4 as uuidv4 } from "uuid";
 import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { Grid } from "@mui/material";
@@ -44,8 +43,6 @@ export default function Scan() {
     } else {
       // notify the user we are making the meeting
       setCreatingMeeting(true);
-
-      // const id = uuidv4();
 
       const meeting: MeetingCreateClient = {
         name,
