@@ -25,7 +25,7 @@ export default function MeetingTable({
       field: "id",
       headerName: "ID",
       type: "number",
-      width: 100,
+      width: 50,
       valueGetter: (params: GridValueGetterParams) => {
         return params.row.student.id;
       },

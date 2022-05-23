@@ -162,7 +162,13 @@ const Home: NextPage = () => {
                   Create User
                 </LoadingButton>
 
-                <ButtonLink link="/">Go to the home page</ButtonLink>
+                <Grid container spacing={0} direction="row">
+                  {/* Please ignore this crime against humanity that is this spacing*/}
+                  <Grid item xs={1.3}></Grid>
+                  <Grid item xs={10.7}>
+                    <ButtonLink link="/">Go to the home page</ButtonLink>
+                  </Grid>
+                </Grid>
               </Box>
             </Box>
           </Grid>
