@@ -10,7 +10,7 @@ Salve is an opensource automated sign-in sheet which puts a focus on signing-in 
 - Automatic late detection
 - Assign names to ids
 - Realtime everything
-- Mutliplayer (mutiple sign-in stations)
+- Multiplayer (multiple sign-in stations)
 - Server Side Rendering
 - Highly portable (with docker)
 
