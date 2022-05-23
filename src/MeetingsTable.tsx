@@ -1,13 +1,10 @@
 import * as React from "react";
 import {
   DataGrid,
-  GridApi,
-  GridCellParams,
-  GridCellValue,
   GridColDef,
   GridValueGetterParams,
-  MuiEvent,
   GridToolbar,
+  GridRenderCellParams,
 } from "@mui/x-data-grid";
 import { MeetingAndParticipants } from "./shared/meetingAndParticipants";
 import { DateTime } from "luxon";
@@ -26,10 +23,10 @@ const columns: GridColDef[] = [
     headerName: "Date",
     width: 150,
 
-    valueGetter: (params: GridValueGetterParams) => {
+    valueGetter: (params: GridValueGetterParams<MeetingAndParticipants>) => {
       return params.row.startTime;
     },
-    renderCell: (params: GridValueGetterParams) => {
+    renderCell: (params: GridRenderCellParams) => {
       return DateTime.fromISO(params.row.startTime).toLocaleString(
         DateTime.DATE_MED
       );
@@ -66,27 +63,18 @@ const columns: GridColDef[] = [
     valueGetter: (params: GridValueGetterParams) =>
       `${params.row.participants.length}`,
   },
-  // {
-  //   field: "live",
-  //   headerName: "Live",
-  //   width: 160,
-  //   valueGetter: (params: GridValueGetterParams) => {
-  //     let link;
-
-  //
-  //   },
-  // },
   {
     field: "live",
     headerName: "",
     renderCell: (params) => {
       if (params.row.endTime !== null) {
-        return <ButtonLink link="info/${params.row.id}">Info</ButtonLink>;
+        return <ButtonLink link={`info/${params.row.id}`}>Info</ButtonLink>;
       } else {
-        return <ButtonLink link="live/${params.row.id}">Live</ButtonLink>;
+        return <ButtonLink link={`live/${params.row.id}`}>Live</ButtonLink>;
       }
     },
     valueGetter: (params: GridValueGetterParams) => `${params.row.endTime}`,
+    disableExport: true,
   },
 ];
 
@@ -97,31 +85,6 @@ interface MeetingTableProps {
 }
 
 export default function MeetingsTable({ meetingData }: MeetingTableProps) {
-  // const rows: number | string | null[] = [];
-
-  // let x: number;
-  // for (x = 0; x > meetingsData.length; x++) {
-  //   console.log(`${meetingsData[x]}::::`);
-  //   rows.push([
-  //     name: meetingsData[x].name,
-  //     startTime: meetingsData[x].startTime,
-  //     endTime: meetingsData[x].endTime,
-  //     amount: meetingsData[x].participants,
-  //     id: meetingsData[x].id,
-  //   ]);
-  // }
-  // console.log(rows + " <==");
-
-  // const test = [
-  //   {
-  //     id: 1,
-  //     name: "Na",
-  //     startTime: new Date().toISOString(),
-  //     endTime: new Date().toISOString(),
-  //     participants: [],
-  //   },
-  // ];
-
   return (
     <div style={{ height: 350, width: "100%" }}>
       <DataGrid
@@ -142,7 +105,32 @@ export default function MeetingsTable({ meetingData }: MeetingTableProps) {
         components={{
           Toolbar: GridToolbar,
         }}
-        componentsProps={{ toolbar: { csvOptions, printOptions } }}
+        componentsProps={{
+          toolbar: {
+            csvOptions: {
+              fields: [
+                "id",
+                "name",
+                "date",
+                "startTime",
+                "endTime",
+                "participants",
+              ],
+              ...csvOptions,
+            },
+            printOptions: {
+              fields: [
+                "id",
+                "name",
+                "date",
+                "startTime",
+                "endTime",
+                "participants",
+              ],
+              ...printOptions,
+            },
+          },
+        }}
       />
     </div>
   );

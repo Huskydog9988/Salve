@@ -1,34 +1,12 @@
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { socket } from "./socket";
 import { Student } from "@prisma/client";
-import { GridCellParams, GridColDef, MuiEvent } from "@mui/x-data-grid/models";
+import { GridColDef } from "@mui/x-data-grid/models";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { exportOptions } from "./shared/exportOptions";
 
 import { useState } from "react";
 import { EditUserName } from "./shared/editUser";
-
-const columns: GridColDef[] = [
-  {
-    field: "id",
-    headerName: "ID",
-    type: "number",
-    width: 100,
-    editable: false,
-  },
-  {
-    field: "name",
-    headerName: "Name",
-    width: 250,
-    editable: true,
-  },
-  {
-    field: "delete",
-    headerName: "Delete",
-    width: 80,
-    hideSortIcons: true,
-  },
-];
 
 const { csvOptions, printOptions } = exportOptions("User List");
 
@@ -37,14 +15,17 @@ interface HomeTableProps {
 }
 
 export default function HomeTable({ users }: HomeTableProps) {
+  // if true, dialog shows
   const [alert, setAlert] = useState(Boolean);
+  // id for deletion
   const [deletingID, setDeletingID] = useState();
+
   const columns: GridColDef[] = [
     {
       field: "id",
       headerName: "ID",
       type: "number",
-      width: 120,
+      width: 100,
       editable: false,
     },
     {
@@ -73,17 +54,18 @@ export default function HomeTable({ users }: HomeTableProps) {
     },
   ];
 
+  // tells server to delete the user
   function deleteUser(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     console.log(`Deleted ${deletingID}`);
     socket.emit("user:delete", deletingID);
   }
-  function sendAlert(event: React.MouseEvent<HTMLButtonElement>) {
-    setAlert(true);
-  }
+
+  // hides the dialog to confirm delete
   function cancelDelete(event: React.MouseEvent<HTMLButtonElement>) {
     setAlert(false);
   }
+
   return (
     <div style={{ height: 340, width: "110%" }}>
       <>
@@ -131,7 +113,12 @@ export default function HomeTable({ users }: HomeTableProps) {
         components={{
           Toolbar: GridToolbar,
         }}
-        componentsProps={{ toolbar: { csvOptions, printOptions } }}
+        componentsProps={{
+          toolbar: {
+            csvOptions: { fields: ["id", "name"], ...csvOptions },
+            printOptions: { fields: ["id", "name"], ...printOptions },
+          },
+        }}
       />
     </div>
   );
