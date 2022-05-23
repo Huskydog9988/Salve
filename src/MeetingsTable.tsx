@@ -15,7 +15,7 @@ import ButtonLink from "../src/ButtonLink";
 import { exportOptions } from "./shared/exportOptions";
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", type: "number", width: 100 },
+  { field: "id", headerName: "ID", type: "number", width: 50 },
   {
     field: "name",
     headerName: "Name",
@@ -139,19 +139,6 @@ export default function MeetingsTable({ meetingData }: MeetingTableProps) {
         hideFooter
         hideFooterPagination
         hideFooterSelectedRowCount
-        onCellClick={(
-          params: GridCellParams,
-          event: MuiEvent<React.MouseEvent>
-        ) => {
-          event.defaultMuiPrevented = true;
-          let link;
-          if (params.row.endTime !== null) {
-            link = `info/${params.row.id}`;
-          } else {
-            link = `join/${params.row.id}`;
-          }
-          window.location.href = link;
-        }}
         components={{
           Toolbar: GridToolbar,
         }}
