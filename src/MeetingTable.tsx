@@ -52,9 +52,11 @@ export default function MeetingTable({
       headerName: "Late",
       width: 160,
       valueGetter: (params: GridValueGetterParams) => {
-
         // joinTime is a string, it must be converted to a DateTime
-        if (lateTime && DateTime.fromISO(params.row.joinTime).toMillis() > lateTime.toMillis()) {
+        if (
+          lateTime &&
+          DateTime.fromISO(params.row.joinTime).toMillis() > lateTime.toMillis()
+        ) {
           return "Late";
         } else {
           return "";
