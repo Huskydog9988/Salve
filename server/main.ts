@@ -1,7 +1,7 @@
 import { Server } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { instrument } from "@socket.io/admin-ui";
-import { MeetingHandler, prisma, StudentHandler } from "./db";
+import { MeetingHandler, StudentHandler } from "./db";
 import { cleanUserId } from "./utils";
 import { StudentJoin } from "../src/shared/studentJoin";
 import { Meeting, Student } from "@prisma/client";
