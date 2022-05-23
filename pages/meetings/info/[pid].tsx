@@ -130,7 +130,11 @@ const Home: NextPage = () => {
           <Grid item xs={2}></Grid>
           <Grid item xs={8}>
             {/*Creates table of users in meeting and times*/}
-            <MeetingTable users={users} lateTime={lateTime} />
+            <MeetingTable
+              users={users}
+              lateTime={lateTime}
+              meetingName={name}
+            />
           </Grid>
         </Grid>
         {/*Creates button to delete meeting*/}

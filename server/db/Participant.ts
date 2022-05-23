@@ -10,34 +10,45 @@ export class ParticipantHandler {
    * @param participant participant info
    */
   async create(participantData: ParticipantCreate) {
-    const participant = await prisma.participant.create({
-      data: {
-        joinTime: participantData.joinTime,
-
-        late: participantData.late,
-
-        // make relation to student
-        student: {
-          // if exists, link, else make user
-          connectOrCreate: {
-            // find user by id
-            where: {
-              id: participantData.studentId,
-            },
-            // create user by id
-            create: {
-              id: participantData.studentId,
-            },
+    // both create and update share the same data
+    const data = {
+      // make relation to student
+      student: {
+        // if exists, link, else make user
+        connectOrCreate: {
+          // find user by id
+          where: {
+            id: participantData.studentId,
           },
-        },
-        // make connection to meeting
-        meeting: {
-          connect: {
-            id: participantData.meetingId,
+          // create user by id
+          create: {
+            id: participantData.studentId,
           },
         },
       },
-      //   idk but this is needed
+      // make connection to meeting
+      meeting: {
+        connect: {
+          id: participantData.meetingId,
+        },
+      },
+    };
+
+    const participant = await prisma.participant.upsert({
+      create: {
+        // don't want the join time and if late to updated later if the system says they joined again
+        // should only use the first time they joined
+        joinTime: participantData.joinTime,
+        late: participantData.late,
+        ...data,
+      },
+      update: data,
+      where: {
+        studentInMeeting: {
+          studentId: participantData.studentId,
+          meetingId: participantData.meetingId,
+        },
+      },
       include: {
         student: true,
       },

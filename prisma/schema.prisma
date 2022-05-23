@@ -40,6 +40,8 @@ model Participant {
   // info related to meeting the participant joined
   meeting   Meeting? @relation(fields: [meetingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   meetingId Int
+
+  @@unique(fields: [studentId, meetingId], name: "studentInMeeting")
 }
 
 model Meeting {
