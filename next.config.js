@@ -23,8 +23,8 @@ const securityHeaders = [
 const nextConfig = {
   // enables strict mode, basiclly yells at you more
   reactStrictMode: true,
-  // disable swc minify
-  swcMinify: false,
+  // enable swc minify
+  swcMinify: true,
   // create source maps for prod so we know where our errors come from
   productionBrowserSourceMaps: true,
   // outputStandalone: true,
