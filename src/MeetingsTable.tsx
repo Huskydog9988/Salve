@@ -70,7 +70,7 @@ const columns: GridColDef[] = [
       if (params.row.endTime !== null) {
         return <ButtonLink link={`info/${params.row.id}`}>Info</ButtonLink>;
       } else {
-        return <ButtonLink link={`live/${params.row.id}`}>Live</ButtonLink>;
+        return <ButtonLink link={`join/${params.row.id}`}>Live</ButtonLink>;
       }
     },
     valueGetter: (params: GridValueGetterParams) => `${params.row.endTime}`,
