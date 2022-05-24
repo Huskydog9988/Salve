@@ -8,5 +8,5 @@ services:
     stdin_open: true
     tty: true
     init: true
-    # volumes:
-      # - ./docker:/usr/src/salve
+    volumes:
+      - ./docker:/usr/src/salve/prisma/database
