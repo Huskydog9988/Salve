@@ -8,6 +8,7 @@ import Salve from "../docs/Salve.svg";
 const Home: NextPage = () => {
   return (
     <Container maxWidth="lg">
+      {/* Enable ui to work with different screen sizes */}
       <Box
         sx={{
           my: 4,
