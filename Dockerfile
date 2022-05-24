@@ -72,7 +72,7 @@ COPY --from=build /usr/src/salve/dist dist
 COPY --from=build /usr/src/salve/.next .next
 COPY --from=build /usr/src/salve/prisma prisma
 
-VOLUME [ "/usr/src/salve" ]
+VOLUME [ "/usr/src/salve", "/usr/src/salve/prisma/database" ]
 
 EXPOSE ${PORT}
 CMD ["node", "dist/server/index.js"]
