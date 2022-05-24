@@ -59,15 +59,15 @@ const hellos = [
   { lang: "Basque", phrase: "Kaixo", pro: "kai-show" },
   { lang: "Bosnian", phrase: "Zdravo", pro: "ZDRAH-voh"},
   { lang: "Inuktitut", phrase: "ᐊᐃᓐᖓᐃ", pro: "ainngai"},
-  { lang: "Māori", phrase: "tēnā koe", pro: "teh-nah koy"},
-  { lang: "Mongolian", phrase: "sain uu", pro: "say-noo"},
+  { lang: "Māori", phrase: "Tēnā koe", pro: "teh-nah koy"},
+  { lang: "Mongolian", phrase: "Sain uu", pro: "say-noo"},
   { lang: "Moroccan", phrase: "الو", pro: "alu"},
-  { lang: "Navajo", phrase: "yá’át’ééh", pro: "YA-at-eh"},
+  { lang: "Navajo", phrase: "Yá’át’ééh", pro: "YA-at-eh"},
   { lang: "Odia", phrase: "ନମସ୍କାର", pro: "namaskar"},
   { lang: "Italian", phrase: "Ciao", pro: "chow"},
   { lang: "Yiddish", phrase: "העלא", pro: "hela"},
-  { lang: "", phrase: "", pro: ""},
-  { lang: "", phrase: "", pro: ""},
+  { lang: "Amharic", phrase: "ሰላም", pro: "selam"},
+  { lang: "Maltese", phrase: "Elow", pro: "elow"},
   
 ];
 
@@ -94,19 +94,22 @@ const Home: NextPage = () => {
 
 
       >
+      
         <Grid container height={180}>
           <Grid item xs={1}></Grid>
           <Grid item xs={4}>
             <Image
               alt="👋 Salve"
               src={Salve}
-              width={400}
-              height={300}
+              width="400px"
+              height="300px"
               priority
               onClick={randomizeHello}
+              layout="fixed"
+              
             />
           </Grid>
-          <Grid item xs={0.2}></Grid>
+          <Grid item xs={0.3}></Grid>
           <Grid item xs={2}>
             <Box
               sx={{
