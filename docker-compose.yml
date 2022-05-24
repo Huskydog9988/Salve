@@ -9,4 +9,4 @@ services:
     tty: true
     init: true
     volumes:
-      - ./docker:/use/src/salve
+      - ./docker:/usr/src/salve
