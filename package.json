@@ -55,7 +55,7 @@
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.6",
-    "sharp": "^0.30.4",
+    "sharp": "^0.30.7",
     "utf-8-validate": "^5.0.9"
   }
 }
